@@ -3,10 +3,15 @@
 /* ---------------------------- */ 
 
 var margin = {top: 100, right: 100, bottom: 100, left: 100},
-    width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
-    height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20); 
+    width = 500 - margin.left - margin.right,
+    height = width; 
 
+// Raw data stores data directly from .csv files
 var raw_data = [];
+
+// Radar data stores data displayed at screen
+// Below, initial values for radar chart when opening webpage
+// These values are for All genders, on question 1_1
 var radar_data = [[
         {axis:"Attractiveness", value:22.514618/100},
         {axis:"Sincerity", value:17.305969/100},
@@ -19,7 +24,23 @@ var radar_data = [[
 let selection_gender = 0 ;
 let selection_question = 41;
 
+// Possible genders and questions
 let genders = ['All', 'Female', 'Male'];
+let questions = ['What you look for in the opposite sex ?', 
+                'What do you think the opposite sex looks for in a date ?', 
+                'How do you think you measure up ?', 
+                'What you think MOST of your fellow men/women look for in the opposite sex?'];
+
+// Inital values for selection in dropdown menus
+let selectedGender = 0.5,
+    selectedQuestion = 11;
+
+// Question displayed at webpage opening
+let questionLegend = ['What you look for in the opposite sex ?'];
+
+// Boolean var that keep tracks of user hitting "clear" button
+// Legend and data actions are done according this value
+let clearedOnce = false;
 
 
 /* ---------------------------- */
@@ -34,6 +55,15 @@ let genderDropdownButton = d3.select("#genderDropdownButton")
     	.append('option')
             .text(function (d) { return d; }) // text showed in the menu
             .attr("value", function (d) { return map_gender(d); }) // corresponding value returned by button
+
+// Questions dropdown menu
+let questionDropdownButton = d3.select("#questionDropdownButton")
+      .selectAll('myOptions')
+     	.data(questions)
+      .enter()
+    	.append('option')
+            .text(function (d) { return d; }) // text showed in the menu
+            .attr("value", function (d) { return map_question(d); }) // corresponding value returned by button
 
 // Clear Button
 let clearButton = d3.select("body")
@@ -52,19 +82,37 @@ let clearButton = d3.select("body")
 
 // Mapping gender function
 function map_gender(gender){
-    if (gender=="All"){
-        return 0.5;
-    } else {
-        if (gender=="Female"){
-            return 0;
-        } else {
-            return 1;
-        }
+    switch (gender){
+        case "All": {return 0.5};
+        case "Female": {return 0};
+        case "Male": {return 1};
     }
 }
 
-// Draw function
-function draw(data, gender, question){
+// Mapping question function
+function map_question(question){
+    switch (question){
+        case "What you look for in the opposite sex ?": {return 11};
+        case "What do you think the opposite sex looks for in a date ?": {return 21};
+        case "How do you think you measure up ?": {return 31};
+        case "What you think MOST of your fellow men/women look for in the opposite sex?": {return 41};
+        default: console.log("Error in question");
+    }
+}
+
+// Mapping question function reversed
+function map_question_reversed(number){
+    switch (number){
+        case "11": {return "What you look for in the opposite sex ?"};
+        case "21": {return "What do you think the opposite sex looks for in a date ?"};
+        case "31": {return "How do you think you measure up ?"};
+        case "41": {return "What you think MOST of your fellow men/women look for in the opposite sex?"};
+        default: console.log("Error in reversed question");
+    }
+}
+
+// Preprocess function : Transform raw data to fit format required for radart chart
+function preprocess(data, gender, question){
     for (let i=0; i<data.length; i++){
         if ((data[i].gender == gender) && (data[i].question==question)){
             radar_data.push([
@@ -78,22 +126,35 @@ function draw(data, gender, question){
     }
 }
 
-// Update function
-function update(selectedGender){
+// Update function : triggered every time user selects field in dropdown menus
+// After updating data, RadarChart function is called with updated values
+function update(updatedGender, updatedQuestion){
+    console.log('UPDATE triggered');
     for (let i=0; i<raw_data.length; i++){
-        if ((raw_data[i].gender == selectedGender)){
-            radar_data.push([
-                {axis:"Attractiveness", value:raw_data[i].attr},
-                {axis:"Ambition", value:raw_data[i].amb},
-                {axis:"Fun", value:raw_data[i].fun},
-                {axis:"Sincerity", value:raw_data[i].sinc},
-                {axis:"Intelligence", value:raw_data[i].intel}
-            ]);
-        }
+        if ((raw_data[i].gender == updatedGender) && (raw_data[i].question == updatedQuestion)){
+            if (clearedOnce){
+                radar_data = [[
+                    {axis:"Attractiveness", value:raw_data[i].attr},
+                    {axis:"Ambition", value:raw_data[i].amb},
+                    {axis:"Fun", value:raw_data[i].fun},
+                    {axis:"Sincerity", value:raw_data[i].sinc},
+                    {axis:"Intelligence", value:raw_data[i].intel}
+                ]];
+            } else {
+                radar_data.push([
+                    {axis:"Attractiveness", value:raw_data[i].attr},
+                    {axis:"Ambition", value:raw_data[i].amb},
+                    {axis:"Fun", value:raw_data[i].fun},
+                    {axis:"Sincerity", value:raw_data[i].sinc},
+                    {axis:"Intelligence", value:raw_data[i].intel}
+                ]);
+            }
+        }        
     }
+    clearedOnce = false;
     console.log('Size of radar data : ' + radar_data.length)
     //Call function to draw the Radar chart
-    RadarChart(".radarChart", radar_data, radarChartOptions);
+    RadarChart(".radarChart", radar_data, radarChartOptions, questionLegend);
 }
 
 
@@ -104,12 +165,29 @@ function update(selectedGender){
 // Callback on gender update
 d3.select("#genderDropdownButton")
     .on("change", function(d) {
-        var selectedOption = d3.select(this).property("value")
-        update(selectedOption)
+        selectedGender = d3.select(this).property("value")
+        // Complete legend array
+        questionLegend.push(map_question_reversed(selectedQuestion));
+        // Update Radar chart
+        update(selectedGender, selectedQuestion)
+    });
+
+// Callback on question update
+d3.select("#questionDropdownButton")
+    .on("change", function(d) {
+        selectedQuestion = d3.select(this).property("value")
+        // Complete legend array
+        questionLegend.push(map_question_reversed(selectedQuestion));
+        // Update Radar chart
+        update(selectedGender, selectedQuestion)
     })
 
 // Callback clear button
 function callbackClearButton(d){
+
+    clearedOnce = true;
+
+    // Clear radar data
     radar_data = [[
         {axis:"Attractiveness", value:0},
         {axis:"Sincerity", value:0},
@@ -118,22 +196,27 @@ function callbackClearButton(d){
         {axis:"Ambition", value:0}
         ]
     ];
+
+    // Clear question legend
+    questionLegend = [];
     console.log('Size of radar data : 0')
-    RadarChart(".radarChart", radar_data, radarChartOptions);
-}
+
+    // Draw radar with no values
+    RadarChart(".radarChart", radar_data, radarChartOptions, questionLegend);
+};
 
 /* ---------------------------- */
-/* RADAR OPTIONS                */
+/* RADAR OPTIONS & LEGEND       */
 /* ---------------------------- */
 
-var color = d3.scale.ordinal()
+let color = d3.scale.ordinal()
     .range(["#EDC951","#CC333F","#00A0B0"]);
     
-var radarChartOptions = {
+let radarChartOptions = {
     w: width,
     h: height,
     margin: margin,
-    maxValue: 0.35,
+    maxValue: 0.40,
     levels: 5,
     roundStrokes: true,
     color: color
@@ -162,7 +245,8 @@ d3.csv("preprocessed_data/radar.csv")
         if (rows.length > 0) {
             raw_data = rows; // Fill global var dataset with rows
             //draw(raw_data, selection_gender, selection_question); 
+
             //Call function to draw the Radar chart
-            RadarChart(".radarChart", radar_data, radarChartOptions);
+            RadarChart(".radarChart", radar_data, radarChartOptions, questionLegend);
         }
     });

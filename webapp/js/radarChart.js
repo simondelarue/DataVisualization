@@ -7,7 +7,7 @@
 
 /* Radar chart design created by Nadieh Bremer - VisualCinnamon.com */
 
-function RadarChart(id, data, options) {
+function RadarChart(id, data, options, legend) {
 
 	var cfg = {
         w: 600,				//Width of the circle
@@ -99,12 +99,10 @@ function RadarChart(id, data, options) {
             .attr("class", "axisLabel")
             .attr("x", 4)
             .attr("y", function(d){return -d*radius/cfg.levels;})
-            //.attr("y", function(d){return radius;})
             .attr("dy", "0.4em")
             .style("font-size", "10px")
             .attr("fill", "#737373")
             .text(function(d,i) { return Format(maxValue * d/cfg.levels); });
-            //.text(function(d,i) { return Format(maxValue/cfg.levels); });
 
 	/////////////////////////////////////////////////////////
 	//////////////////// Draw the axes //////////////////////
@@ -136,7 +134,7 @@ function RadarChart(id, data, options) {
 		.attr("y", function(d, i){ return rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
 		.text(function(d){return d})
 		.call(wrap, cfg.wrapWidth);
-
+	
 	/////////////////////////////////////////////////////////
 	///////////// Draw the radar chart blobs ////////////////
 	/////////////////////////////////////////////////////////
@@ -241,10 +239,48 @@ function RadarChart(id, data, options) {
 	var tooltip = g.append("text")
 		.attr("class", "tooltip")
 		.style("opacity", 0);
-	
+
 	/////////////////////////////////////////////////////////
 	/////////////////// Helper Function /////////////////////
 	/////////////////////////////////////////////////////////
+
+	function legend_color(clearParam, i){
+		if (clearParam){
+			//return cfg.color(i+1);
+			return cfg.color(i);
+		} else {
+			return cfg.color(i);
+		}
+	}
+
+	// LEGEND
+	let legend_shape = svg.append('g')
+		.attr('class', 'legend')
+		.attr('height', 50)
+		.attr('width', 100);
+
+	// Add circles in legend
+	legend_shape.selectAll("mydots")
+		.data(legend)
+		.enter()
+		.append("circle")
+			.attr("cx", 400)
+			.attr("cy", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+			.attr("r", 7)
+			.style("fill", function(d,i){ return legend_color(cfg.clearedOnce, i) });
+			//.style("fill", function(d, i){ return cfg.color(i)});
+
+	// Add labels in legend
+	svg.selectAll("mylabels")
+		.data(legend)
+		.enter()
+		.append("text")
+			.attr("x", 420)
+			.attr("y", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+			//.style("fill", function(d){ return color(d)})
+			.text(function(d){ return d})
+			.attr("text-anchor", "left")
+			.style("alignment-baseline", "middle");
 
 	//Taken from http://bl.ocks.org/mbostock/7555321
 	//Wraps SVG text	
