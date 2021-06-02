@@ -24,7 +24,6 @@ function RadarChart(id, data, options, legend) {
         roundStrokes: false,	//If true the area and stroke will follow a round path (cardinal-closed)
         color: d3.scale.category10()	//Color function
 	};
-
 	
 	//Put all of the options into a variable called cfg
 	if('undefined' !== typeof options){
@@ -55,12 +54,13 @@ function RadarChart(id, data, options, legend) {
 	
 	//Initiate the radar chart SVG
 	var svg = d3.select(id).append("svg")
-			.attr("width",  cfg.w + cfg.margin.left + cfg.margin.right)
-			.attr("height", cfg.h + cfg.margin.top + cfg.margin.bottom)
-			.attr("class", "radar"+id);
+			.attr("width", cfg.w + (cfg.margin.left + cfg.margin.right)*3)
+			.attr("height", cfg.h + cfg.margin.top) //+ cfg.margin.bottom)
+			.attr("class", "radar"+id)
+			.attr("transform", "translate(" + (cfg.margin.left)*(1.7) + "," + "0)");
 	//Append a g element		
 	var g = svg.append("g")
-			.attr("transform", "translate(" + (cfg.w/2 + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top) + ")");
+			.attr("transform", "translate(" + (cfg.w*(0.35) + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top/2) + ")");
 	
 	/////////////////////////////////////////////////////////
 	////////// Glow filter for some extra pizzazz ///////////
@@ -264,7 +264,7 @@ function RadarChart(id, data, options, legend) {
 		.data(legend)
 		.enter()
 		.append("circle")
-			.attr("cx", 400)
+			.attr("cx", 430)
 			.attr("cy", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
 			.attr("r", 7)
 			.style("fill", function(d,i){ return legend_color(cfg.clearedOnce, i) });
@@ -275,7 +275,7 @@ function RadarChart(id, data, options, legend) {
 		.data(legend)
 		.enter()
 		.append("text")
-			.attr("x", 420)
+			.attr("x", 450)
 			.attr("y", function(d,i){ return 100 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
 			//.style("fill", function(d){ return color(d)})
 			.text(function(d){ return d})

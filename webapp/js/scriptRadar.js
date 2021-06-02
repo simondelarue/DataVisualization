@@ -21,14 +21,14 @@ var radar_data = [[
     ]
 ];
 
-// Possible genders and questions
+// All possible genders and questions
 let genders = ['All', 'Female', 'Male'];
 let questions = ['What you look for in the opposite sex ?', 
                 'What do you think the opposite sex looks for in a date ?', 
                 'How do you think you measure up ?', 
                 'What you think MOST of your fellow men/women look for in the opposite sex?'];
 
-// Inital values for selection in dropdown menus and selectors
+// Inital values for selections in dropdown menus and selectors
 let selectedGender = 0.5,
     selectedQuestion = '1',
     selectedTime = '1';
@@ -40,7 +40,8 @@ let questionLegend = ['What you look for in the opposite sex ?'];
 // Legend and data actions are done according this value
 let clearedOnce = false;
 
-// History of choices
+// History of choices. Default value corresponds to combination of default values
+// for selectedQuestion and selectedGender respectively
 let history = ["1_0.5"];
 
 
@@ -67,15 +68,13 @@ let questionDropdownButton = d3.select("#questionDropdownButton")
             .attr("value", function (d) { return map_question(d); }) // corresponding value returned by button
 
 // Clear Button
-let clearButton = d3.select("body")
+let clearButton = d3.select(".radarChart")
     .append("button") 
         .attr("class", "clearButton")
         .attr("type", "button")
-        .text("Clear")
-        .style("position", "relative")
-        .style("top", "10")
-        .style("left", "50")    
+        .text("Clear") 
         .on("click", callbackClearButton);
+
 
 /* ---------------------------- */
 /* FUNCTIONS                    */
