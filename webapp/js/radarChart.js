@@ -57,10 +57,10 @@ function RadarChart(id, data, options, legend) {
 			.attr("width", cfg.w + (cfg.margin.left + cfg.margin.right)*3)
 			.attr("height", cfg.h + cfg.margin.top) //+ cfg.margin.bottom)
 			.attr("class", "radar"+id)
-			.attr("transform", "translate(" + (cfg.margin.left)*(1.7) + "," + "0)");
+			.attr("transform", "translate(" + (cfg.margin.left)*(2) + "," + "0)");
 	//Append a g element		
 	var g = svg.append("g")
-			.attr("transform", "translate(" + (cfg.w*(0.35) + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top/2) + ")");
+			.attr("transform", "translate(" + (cfg.w*(0.4) + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top/2) + ")");
 	
 	/////////////////////////////////////////////////////////
 	////////// Glow filter for some extra pizzazz ///////////

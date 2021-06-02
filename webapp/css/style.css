@@ -55,7 +55,7 @@ button {
     font-size: 12px;
     position: relative;
     top: 100px;
-    right: -420px;
+    right: -460px;
 }
 
 .clearButton {
@@ -80,7 +80,7 @@ button {
     transition: opacity .2s;
     position: relative;
     top: 450px;
-    right: 30px;
+    right: -10px;
   }
   
   .slider::-webkit-slider-thumb {
