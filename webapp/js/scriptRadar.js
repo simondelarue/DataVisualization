@@ -11,7 +11,7 @@ var raw_data = [];
 
 // Radar data stores data displayed at screen
 // Below, initial values for radar chart when opening webpage
-// These values are for All genders, on question 1_1
+// These values are for All genders, on question 1 at time 1
 var radar_data = [[
         {axis:"Attractiveness", value:22.514618/100},
         {axis:"Sincerity", value:17.305969/100},
@@ -28,9 +28,10 @@ let questions = ['What you look for in the opposite sex ?',
                 'How do you think you measure up ?', 
                 'What you think MOST of your fellow men/women look for in the opposite sex?'];
 
-// Inital values for selection in dropdown menus
+// Inital values for selection in dropdown menus and selectors
 let selectedGender = 0.5,
-    selectedQuestion = 11;
+    selectedQuestion = '1',
+    selectedTime = '1';
 
 // Question displayed at webpage opening
 let questionLegend = ['What you look for in the opposite sex ?'];
@@ -40,7 +41,7 @@ let questionLegend = ['What you look for in the opposite sex ?'];
 let clearedOnce = false;
 
 // History of choices
-let history = ["11_0.5"];
+let history = ["1_0.5"];
 
 
 /* ---------------------------- */
@@ -92,10 +93,10 @@ function map_gender(gender){
 // Mapping question function
 function map_question(question){
     switch (question){
-        case "What you look for in the opposite sex ?": {return 11};
-        case "What do you think the opposite sex looks for in a date ?": {return 21};
-        case "How do you think you measure up ?": {return 31};
-        case "What you think MOST of your fellow men/women look for in the opposite sex?": {return 41};
+        case "What you look for in the opposite sex ?": {return '1'};
+        case "What do you think the opposite sex looks for in a date ?": {return '2'};
+        case "How do you think you measure up ?": {return '3'};
+        case "What you think MOST of your fellow men/women look for in the opposite sex?": {return '4'};
         default: console.log("Error in question");
     }
 }
@@ -103,17 +104,17 @@ function map_question(question){
 // Mapping question function reversed
 function map_question_reversed(number){
     switch (number){
-        case "11": {return "What you look for in the opposite sex ?"};
-        case "21": {return "What do you think the opposite sex looks for in a date ?"};
-        case "31": {return "How do you think you measure up ?"};
-        case "41": {return "What you think MOST of your fellow men/women look for in the opposite sex?"};
+        case "1": {return "What you look for in the opposite sex ?"};
+        case "2": {return "What do you think the opposite sex looks for in a date ?"};
+        case "3": {return "How do you think you measure up ?"};
+        case "4": {return "What you think MOST of your fellow men/women look for in the opposite sex?"};
         default: console.log("Error in reversed question");
     }
 }
 
 // Build history key format
 function history_key(question, gender) {
-    return question + '_' + String(gender);
+    return question[0] + '_' + String(gender);
 }
 
 // Preprocess function : Transform raw data to fit format required for radart chart
@@ -134,9 +135,11 @@ function preprocess(data, gender, question){
 // Update function : triggered every time user selects field in dropdown menus
 // After updating data, RadarChart function is called with updated values
 function update(updatedGender, updatedQuestion){
-    console.log('UPDATE triggered');
+    console.log('Update triggered');
+
     for (let i=0; i<raw_data.length; i++){
-        if ((raw_data[i].gender == updatedGender) && (raw_data[i].question == updatedQuestion)){
+        if ((raw_data[i].gender == updatedGender) && (raw_data[i].question[0] == updatedQuestion)
+            && (raw_data[i].question[1] == selectedTime)){
             if (clearedOnce){
                 radar_data = [[
                     {axis:"Attractiveness", value:raw_data[i].attr},
@@ -160,6 +163,32 @@ function update(updatedGender, updatedQuestion){
     console.log('Size of radar data : ' + radar_data.length)
     //Call function to draw the Radar chart
     RadarChart(".radarChart", radar_data, radarChartOptions, questionLegend);
+}
+
+// Update function according to time slider
+// After update, RadarChart function is called on every request saved in history, with corresponding time
+function update_time(hist, updatedTime) {
+    console.log('Update time triggered');
+    console.log('hist : ' + hist);
+
+    radar_data_time = [];
+
+    for (let req=0; req<hist.length; req++){
+        for (let i=0; i<raw_data.length; i++){
+            if ((raw_data[i].gender == hist[req].substr(2)) &&
+                (raw_data[i].question[0] == hist[req][0]) &&
+                (raw_data[i].question[1] == updatedTime)) {
+                    radar_data_time.push([
+                        {axis:"Attractiveness", value:raw_data[i].attr},
+                        {axis:"Ambition", value:raw_data[i].amb},
+                        {axis:"Fun", value:raw_data[i].fun},
+                        {axis:"Sincerity", value:raw_data[i].sinc},
+                        {axis:"Intelligence", value:raw_data[i].intel}
+                    ])
+                }
+        }
+        RadarChart(".radarChart", radar_data_time, radarChartOptions, questionLegend)
+    }
 }
 
 
@@ -199,6 +228,17 @@ d3.select("#questionDropdownButton")
             // Update Radar chart
             update(selectedGender, selectedQuestion)
         }
+    })
+
+// Callback on Time slider
+d3.select("#myRange")
+    .on("change", function(d) {
+        selectedTime = d3.select(this).property("value")
+        // Update time value for every displayed chart
+        console.log('SELECTED TIME : ', selectedTime);
+        // Update Radar chart
+        console.log('History ' + history + ' selectedTime ' + selectedTime);
+        update_time(history, selectedTime);
     })
 
 // Callback clear button
@@ -250,9 +290,9 @@ let radarChartOptions = {
 /* ---------------------------- */
 
 // Load data from .tsv file with d3 + preprocess them
-d3.csv("preprocessed_data/radar.csv")
+d3.csv("preprocessed_data/radar_all.csv")
     .row( (d, i) => {
-        if (d.question=="31") {
+        if (d.question[0]=="3") {
             let points = d3.sum([+d.attr, +d.sinc, +d.intel, +d.fun, +d.amb]);
             return {
                 gender: +d.gender,
@@ -261,7 +301,7 @@ d3.csv("preprocessed_data/radar.csv")
                 intel: +d.intel/points,
                 fun: +d.fun/points,
                 amb: +d.amb/points,
-                question: +d.question,
+                question: (+d.question).toString(),
             };
         } else {
             return {
@@ -271,7 +311,7 @@ d3.csv("preprocessed_data/radar.csv")
                 intel: +d.intel/100,
                 fun: +d.fun/100,
                 amb: +d.amb/100,
-                question: +d.question,
+                question: (+d.question).toString(),
             };
         } 
     })
