@@ -21,9 +21,6 @@ var radar_data = [[
     ]
 ];
 
-let selection_gender = 0 ;
-let selection_question = 41;
-
 // Possible genders and questions
 let genders = ['All', 'Female', 'Male'];
 let questions = ['What you look for in the opposite sex ?', 
@@ -41,6 +38,9 @@ let questionLegend = ['What you look for in the opposite sex ?'];
 // Boolean var that keep tracks of user hitting "clear" button
 // Legend and data actions are done according this value
 let clearedOnce = false;
+
+// History of choices
+let history = ["11_0.5"];
 
 
 /* ---------------------------- */
@@ -71,9 +71,9 @@ let clearButton = d3.select("body")
         .attr("class", "clearButton")
         .attr("type", "button")
         .text("Clear")
-        .style("position", "absolute")
-        .style("top", "0")
-        .style("left", "100")    
+        .style("position", "relative")
+        .style("top", "10")
+        .style("left", "50")    
         .on("click", callbackClearButton);
 
 /* ---------------------------- */
@@ -109,6 +109,11 @@ function map_question_reversed(number){
         case "41": {return "What you think MOST of your fellow men/women look for in the opposite sex?"};
         default: console.log("Error in reversed question");
     }
+}
+
+// Build history key format
+function history_key(question, gender) {
+    return question + '_' + String(gender);
 }
 
 // Preprocess function : Transform raw data to fit format required for radart chart
@@ -166,26 +171,42 @@ function update(updatedGender, updatedQuestion){
 d3.select("#genderDropdownButton")
     .on("change", function(d) {
         selectedGender = d3.select(this).property("value")
-        // Complete legend array
-        questionLegend.push(map_question_reversed(selectedQuestion));
-        // Update Radar chart
-        update(selectedGender, selectedQuestion)
+
+        // Update only if one of the selections is different from what's currently displayed
+        if (!(history.includes(history_key(selectedQuestion, selectedGender)))) {
+            // Fill history
+            history.push(history_key(selectedQuestion, selectedGender));
+            console.log('history after gender update : ' + history)
+            // Complete legend array
+            questionLegend.push(map_question_reversed(selectedQuestion));
+            // Update Radar chart
+            update(selectedGender, selectedQuestion)
+        }
     });
 
 // Callback on question update
 d3.select("#questionDropdownButton")
     .on("change", function(d) {
         selectedQuestion = d3.select(this).property("value")
-        // Complete legend array
-        questionLegend.push(map_question_reversed(selectedQuestion));
-        // Update Radar chart
-        update(selectedGender, selectedQuestion)
+
+        // Update only if one of the selections is different from what's currently displayed
+        if (!(history.includes(history_key(selectedQuestion, selectedGender)))) {
+            // Fill history
+            history.push(history_key(selectedQuestion, selectedGender));
+            console.log('history after question update : ' + history)
+            // Complete legend array
+            questionLegend.push(map_question_reversed(selectedQuestion));
+            // Update Radar chart
+            update(selectedGender, selectedQuestion)
+        }
     })
 
 // Callback clear button
 function callbackClearButton(d){
 
     clearedOnce = true;
+    // Clear history of user's selections
+    history = [];
 
     // Clear radar data
     radar_data = [[
@@ -210,7 +231,9 @@ function callbackClearButton(d){
 /* ---------------------------- */
 
 let color = d3.scale.ordinal()
-    .range(["#EDC951","#CC333F","#00A0B0"]);
+    //.range(["#EDC951","#CC333F","#00A0B0"]); 
+    .range(["#a6cee3", "#b2df8a", "#fb9a99",
+            "#fdbf6f", "#ff7f00", "#cab2d6", "#8dd3c7", "#1f78b4"])
     
 let radarChartOptions = {
     w: width,
@@ -229,22 +252,36 @@ let radarChartOptions = {
 // Load data from .tsv file with d3 + preprocess them
 d3.csv("preprocessed_data/radar.csv")
     .row( (d, i) => {
-        return {
-            gender: +d.gender,
-            attr: +d.attr/100,
-            sinc: +d.sinc/100,
-            intel: +d.intel/100,
-            fun: +d.fun/100,
-            amb: +d.amb/100,
-            question: +d.question,
-        };
+        if (d.question=="31") {
+            let points = d3.sum([+d.attr, +d.sinc, +d.intel, +d.fun, +d.amb]);
+            return {
+                gender: +d.gender,
+                attr: +d.attr/points,
+                sinc: +d.sinc/points,
+                intel: +d.intel/points,
+                fun: +d.fun/points,
+                amb: +d.amb/points,
+                question: +d.question,
+            };
+        } else {
+            return {
+                gender: +d.gender,
+                attr: +d.attr/100,
+                sinc: +d.sinc/100,
+                intel: +d.intel/100,
+                fun: +d.fun/100,
+                amb: +d.amb/100,
+                question: +d.question,
+            };
+        } 
     })
     // Creates get Data and calls Draw function
     .get( (error, rows) => {
         console.log("Loaded " + rows.length + " rows");
         if (rows.length > 0) {
-            raw_data = rows; // Fill global var dataset with rows
-            //draw(raw_data, selection_gender, selection_question); 
+            
+            // Fill global var dataset with rows
+            raw_data = rows; 
 
             //Call function to draw the Radar chart
             RadarChart(".radarChart", radar_data, radarChartOptions, questionLegend);
