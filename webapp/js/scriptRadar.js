@@ -51,21 +51,21 @@ let history = ["1_0.5"];
 
 // Gender dropdown menu
 let genderDropdownButton = d3.select("#genderDropdownButton")
-      .selectAll('myOptions')
-     	.data(genders)
-      .enter()
-    	.append('option')
-            .text(function (d) { return d; }) // text showed in the menu
-            .attr("value", function (d) { return map_gender(d); }) // corresponding value returned by button
+    .selectAll('myOptions')
+        .data(genders)
+        .enter()
+    	    .append('option')
+                .text(function (d) { return d; }) // text showed in the menu
+                .attr("value", function (d) { return map_gender(d); }) // corresponding value returned by button
 
 // Questions dropdown menu
 let questionDropdownButton = d3.select("#questionDropdownButton")
-      .selectAll('myOptions')
+    .selectAll('myOptions')
      	.data(questions)
-      .enter()
-    	.append('option')
-            .text(function (d) { return d; }) // text showed in the menu
-            .attr("value", function (d) { return map_question(d); }) // corresponding value returned by button
+        .enter()
+    	    .append('option')
+                .text(function (d) { return d; }) // text showed in the menu
+                .attr("value", function (d) { return map_question(d); }) // corresponding value returned by button
 
 // Clear Button
 let clearButton = d3.select(".radarChart")
