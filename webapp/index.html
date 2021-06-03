@@ -16,13 +16,48 @@
 	
 	</head>
 	<body>
+		<!-- RadarChart div -->
 		<div class="radarChart">
+			<h1>Ratings analysis</h1>
+
+			<!-- Global information -->
+			<p class="global-info"><strong>Five personality characteristics are evaluated ; Intelligence, sincerity, attractiveness, ambition and fun. For each of them, candidates gave ratings between 1-100.  These characteristics can refer to auto-evaluation or third-party evaluation, at different moments in the speed dating process.</strong>
+			<i>For example, candidates were asked : You have 100 points to distribute among the following attributes --give more points to those attributes that are more important in a potential date, and fewer points to those attributes that are less important in a potential date. Total points must equal 100.</i></p>
+
+			<!-- Radar information -->
+			<div class="radar-info-title">
+				<p class="radar-info-title-text">
+					Reading grid
+				</p>
+			</div>
+			<div class="radar-info">
+				<p class="radar-info-text">
+					<span class="time-text">
+						Before speed dating
+					</span>
+					, 
+					<span class="attractiveness-text">
+						people tend to look for attractive person (23%) first, and give less importance to ambition (11%).
+					</span>
+					<br/><br/>
+					On average, people think opposite sex is looking for attractiveness first (30%) and gives less importance to ambition (11%).
+					<br/><br/>
+					It is interesting to note that on the attractiveness characteristic, the difference between what people are looking for and what they think other people are looking for is over 30%.
+					<br/><br/>
+					<strong>Try to use filters and time slider to get a better understanding on rating's evolution !</strong>
+				</p>
+			</div>
+	
+			<!-- Dropdown menus -->
 			<div class="custom-select">
 				<select id="genderDropdownButton"></select>
 				<select id="questionDropdownButton"></select>
 			</div>
+
+			<!-- Slider -->
 			<div class="slidecontainer">
 				<input type="range" min="1" max="3" value="1" class="slider" id="myRange">
+				<p class="slider-info"><i>Select time period (before, during or after speed dating experiment)</i></p>
 			</div>
         </div>
 

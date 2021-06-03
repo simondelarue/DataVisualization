@@ -17,6 +17,63 @@ body {
     fill: #333333;
 }
 
+/* -------- GLOBAL INFO --------- */
+.global-info {
+    text-align: center;
+    font-size: 12px;
+    width: 80%;
+    position: relative;
+    right: -100px;
+}
+
+/* -------- RADAR INFO --------- */
+.radar-info-title {
+    width: 300px;
+    height: 20px;
+    position: absolute;
+    top: 140px;
+    right: 875px;
+    background-color: white;
+    z-index: 3;
+}
+
+.radar-info-title-text {
+    width: 90%;
+    text-align: center;
+    position: relative;
+    top: -15px;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(33, 92, 119);
+}
+
+.radar-info {
+    width: 350px;
+    height: 400px;
+    border: 1px solid;
+    position: absolute;
+    top: 150px;
+    right: 850px;
+    border-color:rgb(33, 92, 119);
+}
+
+.radar-info-text {
+    width: 90%;
+    text-align: left;
+    position: relative;
+    right: -15px;
+    top: 40px;
+}
+
+.time-text {
+    color:#04AA6D;
+    font-weight: bold;
+}
+
+.attractiveness-text {
+    color: #64a9ce;
+}
+
 /* -------- DROPDOWN MENUS --------- */
 #genderDropdownButton {
     width: 70;
@@ -54,8 +111,8 @@ button {
     display: inline-block;
     font-size: 12px;
     position: relative;
-    top: 100px;
-    right: -460px;
+    top: 50px;
+    right: -470px;
 }
 
 .clearButton {
@@ -80,7 +137,7 @@ button {
     transition: opacity .2s;
     position: relative;
     top: 450px;
-    right: -10px;
+    right: -30px;
   }
   
   .slider::-webkit-slider-thumb {
@@ -100,3 +157,15 @@ button {
     background: #04AA6D;
     cursor: pointer;
   }
+
+
+/* -------- SLIDER INFO --------- */
+.slider-info {
+    text-align: center;
+    font-size: 11px;
+    color: #04AA6D;
+    font-style: bold;
+    position: relative;
+    top: 380px; 
+    right: -30px;
+}
