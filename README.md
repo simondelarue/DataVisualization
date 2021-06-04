@@ -46,11 +46,25 @@ This visualization proposes to give insight to answer this question, by providin
 
 For this study, we propose a martini-glass based approach, meaning that the user is given a global idea about the answer, with a small analysis provided, and is then invited to interact with the tool in order to find answers to more precise questions that could eventually arise during the first part.
 
-The general overview of the visualization is the one following 
+The general overview of the intial sketch desing was as following 
 
 <p align="center">
     <img src='img/rating_analysis_1.png'>
-</p>
+</p>  
+
+Using **python** for data preprocessing and **D3.js** to build radar chart and add interactivity, the final visualization tool looks like the following for the user.
+
+This tool gives the user the ability to filter data on different dimensions :  
+* Gender  
+* Question asked to candidate  
+
+Thanks to a **time slider** the user can get an intuition of the evolution of candidates answers on topic such as "what they look for" or "how they think they measure up".  
+
+On the left of the tool, a small information textbox allows the user to understand how to actually read the radar chart, and provides a small analysis of the data initially displayed. For this information box, **match on content** is used, help the user recognize which features are analysed.
+
+<p align="center">
+    <img src='img/design_1.gif'>
+</p> 
 
 
 ### 2.2 Evolution of ratings with regard of personal characteristics  <a class="anchor" id="Charac"></a>  
