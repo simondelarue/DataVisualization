@@ -25,11 +25,19 @@
 			<i>For example, candidates were asked : You have 100 points to distribute among the following attributes --give more points to those attributes that are more important in a potential date, and fewer points to those attributes that are less important in a potential date. Total points must equal 100.</i></p>
 	
 			<!-- Dropdown menus -->
-			<div class="custom-select">
-				<select id="genderDropdownButton"></select>
-				<select id="questionDropdownButton"></select>
+			<div class='custom-select'>
+				<div class="custom-select-gender">
+					<select id="genderDropdownButton">
+						<option selected> Gender </option>
+					</select>
+				</div>
+				<div class="custom-select-question">
+					<select id="questionDropdownButton">
+						<option selected> Question </option>
+					</select>
+				</div>
 			</div>
-
+			
 			<!-- Slider -->
 			<div class="slidecontainer">
 				<input type="range" min="1" max="3" value="1" class="slider" id="myRange">

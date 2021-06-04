@@ -78,6 +78,89 @@ body {
 }
 
 /* -------- DROPDOWN MENUS --------- */
+
+.custom-select {
+    width: 550px;
+    height: 25px;
+    position: relative;
+    top: 5px;
+    left: 700px;
+}
+
+.custom-select-gender {
+    width: 100px;
+    height: 25px;
+    position: relative;
+    left: 50px;
+}
+
+.custom-select-question {
+    width: 100px;
+    height: 25px;
+    position: relative;
+    top: -20px;
+    left: 300px;
+}
+
+.custom-select-gender:after {
+    content: "\25bc";
+    color: #888;
+    font-size: 15px;
+    padding: 12px 8px;
+    position: relative;
+    left: 8px;
+    top: -25px;
+    text-align: center;
+    pointer-events: none;
+    color: rgb(33, 92, 119);
+}
+
+.custom-select-question:after {
+    content: "\25bc";
+    color: #888;
+    font-size: 15px;
+    padding: 12px 8px;
+    position: relative;
+    left: -30px;
+    top: -30px;
+    text-align: center;
+    pointer-events: none;
+    color: rgb(33, 92, 119);
+}
+
+.custom-select #genderDropdownButton {
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    position: relative;
+    left: -30px;
+    font-size: 12.5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /*padding: 5px 10px;*/
+    color: #333;
+    border: 1px solid rgb(33, 92, 119);
+    outline: none;
+}
+
+.custom-select #questionDropdownButton {
+    width: 200px;
+    height: 30px;
+    text-align: center;
+    position: relative;
+    left: -150px;
+    top: -5px;
+    font-size: 12.5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: #333;
+    border: 1px solid rgb(33, 92, 119);
+    outline: none;
+}
+
+/*
 #genderDropdownButton {
     width: 70;
     height: 20px;
@@ -90,7 +173,8 @@ body {
     border: 1px solid rgb(33, 92, 119);
     color: aliceblue;
 }
-
+*/
+/*
 #questionDropdownButton {
     width: 60;
     height: 20px;
@@ -103,6 +187,7 @@ body {
     border: 1px solid rgb(33, 92, 119);
     color: aliceblue;
 }
+*/
 
 /* -------- CLEAR BUTTON --------- */
 button {
