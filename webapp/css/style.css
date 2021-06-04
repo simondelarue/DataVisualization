@@ -79,12 +79,13 @@ body {
 
 /* -------- DROPDOWN MENUS --------- */
 
+/* Containers */
 .custom-select {
-    width: 550px;
+    width: 650px;
     height: 25px;
     position: relative;
     top: 5px;
-    left: 700px;
+    left: 600px;
 }
 
 .custom-select-gender {
@@ -95,13 +96,14 @@ body {
 }
 
 .custom-select-question {
-    width: 100px;
+    width: 500px;
     height: 25px;
     position: relative;
     top: -20px;
     left: 300px;
 }
 
+/* Arrows */
 .custom-select-gender:after {
     content: "\25bc";
     color: #888;
@@ -121,13 +123,14 @@ body {
     font-size: 15px;
     padding: 12px 8px;
     position: relative;
-    left: -30px;
+    left: 70px;
     top: -30px;
     text-align: center;
     pointer-events: none;
     color: rgb(33, 92, 119);
 }
 
+/* Dropdown boxes */
 .custom-select #genderDropdownButton {
     width: 100px;
     height: 30px;
@@ -145,7 +148,7 @@ body {
 }
 
 .custom-select #questionDropdownButton {
-    width: 200px;
+    width: 500px;
     height: 30px;
     text-align: center;
     position: relative;
