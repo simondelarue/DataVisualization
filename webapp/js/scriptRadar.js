@@ -11,7 +11,7 @@ var raw_data = [];
 
 // Radar data stores data displayed at screen
 // Below, initial values for radar chart when opening webpage
-// These values are for All genders, on question 1 at time 1
+// These values are for All genders, on question 1 and 2 at time 1
 var radar_data = [[
         {axis:"Attractiveness", value:22.514618/100},
         {axis:"Sincerity", value:17.305969/100},
@@ -39,7 +39,7 @@ let selectedGender = 0.5,
     selectedQuestion = '1',
     selectedTime = '1';
 
-// Question displayed at webpage opening
+// Questions displayed at webpage opening
 let questionLegend = ['What you look for in the opposite sex ?', 
                       'What do you think the opposite sex looks for in a date ?'];
 
@@ -55,6 +55,23 @@ let history = ["1_0.5", "2_0.5"];
 /* ---------------------------- */
 /* CANVAS                       */
 /* ---------------------------- */
+
+/* Radar Information */
+let radar_info_container = d3.select(".radarChart")
+    .append("div")
+        .attr("class", "radar-info-container");
+
+let radar_info_title = radar_info_container.append("div")
+    .attr("class", "radar-info-title")
+    .append("p")
+        .attr("class", "radar-info-title-text")
+            .text("Reading grid")
+
+let radar_info = radar_info_container.append("div")
+    .attr("class", "radar-info")
+    .append("p")
+        .attr("class", "radar-info-text")
+        .html("<span class='time-span'>Before speed dating</span>, <span class='lookfor-text'>people tend to look for attractive person (23%) first, and give less importance to ambition (11%).</span> <br/><br/><span class='oppos-lookfor-text'>On average, people think opposite sex is looking for attractiveness first (30%) and gives less importance to ambition (11%).</span> </br></br> It is interesting to note that on the attractiveness characteristic, the difference between what people are looking for and what they think other people are looking for is over 30%.<br/><br/><strong>Try to use filters and time slider to get a better understanding on rating's evolution !</strong>");
 
 // Gender dropdown menu
 let genderDropdownButton = d3.select("#genderDropdownButton")

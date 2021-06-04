@@ -7,6 +7,14 @@
 
 /* Radar chart design created by Nadieh Bremer - VisualCinnamon.com */
 
+
+
+/* Add-ons for the purpose of IGR2014 project :
+	- Legend : Labels and colored bullet points
+*/
+
+
+
 function RadarChart(id, data, options, legend) {
 
 	var cfg = {
@@ -157,7 +165,7 @@ function RadarChart(id, data, options, legend) {
 			
 	//Append the backgrounds	
 	blobWrapper
-		.append("path")
+		.append("path")		
 		.attr("class", "radarArea")
 		.attr("d", function(d,i) { return radarLine(d); })
 		.style("fill", function(d,i) { return cfg.color(i); })
@@ -178,7 +186,7 @@ function RadarChart(id, data, options, legend) {
 				.transition().duration(200)
 				.style("fill-opacity", cfg.opacityArea);
 		});
-		
+
 	//Create the outlines	
 	blobWrapper.append("path")
 		.attr("class", "radarStroke")
@@ -191,7 +199,7 @@ function RadarChart(id, data, options, legend) {
 	//Append the circles
 	blobWrapper.selectAll(".radarCircle")
 		.data(function(d,i) { return d; })
-		.enter().append("circle")
+		.enter().append("circle")		
 		.attr("class", "radarCircle")
 		.attr("r", cfg.dotRadius)
 		.attr("cx", function(d,i){ return rScale(d.value) * Math.cos(angleSlice*i - Math.PI/2); })

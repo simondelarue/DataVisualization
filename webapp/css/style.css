@@ -27,34 +27,33 @@ body {
 }
 
 /* -------- RADAR INFO --------- */
-.radar-info-title {
-    width: 300px;
-    height: 20px;
-    position: absolute;
-    top: 140px;
-    right: 875px;
-    background-color: white;
-    z-index: 3;
-}
 
-.radar-info-title-text {
-    width: 90%;
-    text-align: center;
-    position: relative;
-    top: -15px;
-    font-weight: bold;
-    font-size: 15px;
-    color: rgb(33, 92, 119);
-}
-
-.radar-info {
+.radar-info-container {
     width: 350px;
     height: 400px;
     border: 1px solid;
     position: absolute;
     top: 150px;
-    right: 850px;
+    left: 65px;
     border-color:rgb(33, 92, 119);
+}
+
+.radar-info-title {
+    width: 300px;
+    height: 20px;
+    position: relative;
+    bottom: 25px;
+    left: 25px;
+    background-color: white ;
+    z-index: 2;
+}
+
+.radar-info-title-text {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(33, 92, 119);
+    z-index: 3;
 }
 
 .radar-info-text {
@@ -65,13 +64,17 @@ body {
     top: 40px;
 }
 
-.time-text {
+.time-span {
     color:#04AA6D;
     font-weight: bold;
 }
 
-.attractiveness-text {
+.lookfor-text {
     color: #64a9ce;
+}
+
+.oppos-lookfor-text {
+    color: #d37271;
 }
 
 /* -------- DROPDOWN MENUS --------- */
@@ -116,10 +119,11 @@ button {
 }
 
 .clearButton {
-    background-color: #4CAF50; 
+    /*background-color: #4CAF50; */
+    background-color: rgb(33, 92, 119); 
 }
 .clearButton:active{
-    background:#63dd67;
+    background:rgb(53, 148, 192);
 }
 
 /* -------- SLIDER --------- */
