@@ -18,6 +18,12 @@ var radar_data = [[
         {axis:"Intelligence", value:20.195282/100},
         {axis:"Fun", value:17.44558/100},
         {axis:"Ambition", value:10.821216/100}
+    ], [
+        {axis:"Attractiveness", value:30.242579/100},
+        {axis:"Sincerity", value:13.196501/100},
+        {axis:"Intelligence", value:14.416354/100},
+        {axis:"Fun", value:18.548026/100},
+        {axis:"Ambition", value:11.735934/100}
     ]
 ];
 
@@ -34,7 +40,8 @@ let selectedGender = 0.5,
     selectedTime = '1';
 
 // Question displayed at webpage opening
-let questionLegend = ['What you look for in the opposite sex ?'];
+let questionLegend = ['What you look for in the opposite sex ?', 
+                      'What do you think the opposite sex looks for in a date ?'];
 
 // Boolean var that keep tracks of user hitting "clear" button
 // Legend and data actions are done according this value
@@ -42,7 +49,7 @@ let clearedOnce = false;
 
 // History of choices. Default value corresponds to combination of default values
 // for selectedQuestion and selectedGender respectively
-let history = ["1_0.5"];
+let history = ["1_0.5", "2_0.5"];
 
 
 /* ---------------------------- */
@@ -271,7 +278,7 @@ function callbackClearButton(d){
 
 let color = d3.scale.ordinal()
     //.range(["#EDC951","#CC333F","#00A0B0"]); 
-    .range(["#a6cee3", "#b2df8a", "#fb9a99",
+    .range(["#a6cee3", "#fb9a99", "#b2df8a",
             "#fdbf6f", "#ff7f00", "#cab2d6", "#8dd3c7", "#1f78b4"])
     
 let radarChartOptions = {
