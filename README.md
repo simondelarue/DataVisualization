@@ -20,7 +20,7 @@ To run the web application please follow instructions (command lines) below to :
 * launch application script  
 * go to `http://127.0.0.1:5000/ `  
 
-``` python
+``` system
 $ git clone https://github.com/simondelarue/DataVisualization
 $ cd DataVisulization/webapp
 $ python3 app.py
