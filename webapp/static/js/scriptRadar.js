@@ -1,3 +1,7 @@
+/* ============================ */
+/* RADAR CHART SCRIPT           */
+/* ============================ */ 
+
 /* ---------------------------- */
 /* SET UP                       */
 /* ---------------------------- */ 
@@ -313,7 +317,7 @@ let radarChartOptions = {
 /* ---------------------------- */
 
 // Load data from .tsv file with d3 + preprocess them
-d3.csv("preprocessed_data/radar_all.csv")
+d3.csv("../static/preprocessed_data/radar_all.csv")
     .row( (d, i) => {
         if (d.question[0]=="3") {
             let points = d3.sum([+d.attr, +d.sinc, +d.intel, +d.fun, +d.amb]);
