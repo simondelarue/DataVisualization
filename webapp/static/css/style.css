@@ -1,0 +1,291 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    fill: #242424;
+    text-align: center;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+    cursor: default;
+}
+
+.legend {
+    font-family: 'Raleway', sans-serif;
+    fill: #333333;
+}
+
+.tooltip {
+    fill: #333333;
+}
+
+/* -------- NAVIGATION BAR --------- */
+/* Style from https://www.w3schools.com/Css/css_navbar_horizontal.asp */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(170, 37, 37);
+}
+  
+li {
+    float: left;
+}
+  
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+  
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: #111;
+}
+
+
+/* -------- GLOBAL INFO --------- */
+.global-info {
+    text-align: center;
+    font-size: 12px;
+    width: 80%;
+    position: relative;
+    right: -100px;
+}
+
+/* -------- RADAR INFO --------- */
+
+.radar-info-container {
+    width: 350px;
+    height: 400px;
+    border: 1px solid;
+    position: absolute;
+    top: 150px;
+    left: 65px;
+    border-color:rgb(33, 92, 119);
+}
+
+.radar-info-title {
+    width: 300px;
+    height: 20px;
+    position: relative;
+    bottom: 25px;
+    left: 25px;
+    background-color: white ;
+    z-index: 2;
+}
+
+.radar-info-title-text {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(33, 92, 119);
+    z-index: 3;
+}
+
+.radar-info-text {
+    width: 90%;
+    text-align: left;
+    position: relative;
+    right: -15px;
+    top: 40px;
+}
+
+.time-span {
+    color:#04AA6D;
+    font-weight: bold;
+}
+
+.lookfor-text {
+    color: #64a9ce;
+}
+
+.oppos-lookfor-text {
+    color: #d37271;
+}
+
+/* -------- DROPDOWN MENUS --------- */
+
+/* Containers */
+.custom-select {
+    width: 650px;
+    height: 25px;
+    position: relative;
+    top: 5px;
+    left: 600px;
+}
+
+.custom-select-gender {
+    width: 100px;
+    height: 25px;
+    position: relative;
+    left: 50px;
+}
+
+.custom-select-question {
+    width: 500px;
+    height: 25px;
+    position: relative;
+    top: -20px;
+    left: 300px;
+}
+
+/* Arrows */
+.custom-select-gender:after {
+    content: "\25bc";
+    color: #888;
+    font-size: 15px;
+    padding: 12px 8px;
+    position: relative;
+    left: 8px;
+    top: -25px;
+    text-align: center;
+    pointer-events: none;
+    color: rgb(33, 92, 119);
+}
+
+.custom-select-question:after {
+    content: "\25bc";
+    color: #888;
+    font-size: 15px;
+    padding: 12px 8px;
+    position: relative;
+    left: 70px;
+    top: -30px;
+    text-align: center;
+    pointer-events: none;
+    color: rgb(33, 92, 119);
+}
+
+/* Dropdown boxes */
+.custom-select #genderDropdownButton {
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    position: relative;
+    left: -30px;
+    font-size: 12.5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /*padding: 5px 10px;*/
+    color: #333;
+    border: 1px solid rgb(33, 92, 119);
+    outline: none;
+}
+
+.custom-select #questionDropdownButton {
+    width: 500px;
+    height: 30px;
+    text-align: center;
+    position: relative;
+    left: -150px;
+    top: -5px;
+    font-size: 12.5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: #333;
+    border: 1px solid rgb(33, 92, 119);
+    outline: none;
+}
+
+/*
+#genderDropdownButton {
+    width: 70;
+    height: 20px;
+    text-align: center;
+    position: relative;
+    top: 15px;
+    right: -290px;
+    background-color: rgb(33, 92, 119);
+    display: inline-block;
+    border: 1px solid rgb(33, 92, 119);
+    color: aliceblue;
+}
+*/
+/*
+#questionDropdownButton {
+    width: 60;
+    height: 20px;
+    text-align: center;
+    position: relative;
+    top: 15px;
+    right: -300px;
+    background-color: rgb(33, 92, 119);
+    display: inline-block;
+    border: 1px solid rgb(33, 92, 119);
+    color: aliceblue;
+}
+*/
+
+/* -------- CLEAR BUTTON --------- */
+button {
+    width: 75px;
+    height: 30px;
+    color: white;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    position: relative;
+    top: 50px;
+    right: -470px;
+}
+
+.clearButton {
+    /*background-color: #4CAF50; */
+    background-color: rgb(33, 92, 119); 
+}
+.clearButton:active{
+    background:rgb(53, 148, 192);
+}
+
+/* -------- SLIDER --------- */
+/* Style of slider from https://www.w3schools.com/howto/howto_js_rangeslider.asp */
+
+.slider {
+    -webkit-appearance: none;
+    width: 20%;
+    height: 10px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    position: relative;
+    top: 450px;
+    right: -30px;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #04AA6D;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #04AA6D;
+    cursor: pointer;
+  }
+
+
+/* -------- SLIDER INFO --------- */
+.slider-info {
+    text-align: center;
+    font-size: 11px;
+    color: #04AA6D;
+    font-style: bold;
+    position: relative;
+    top: 380px; 
+    right: -30px;
+}

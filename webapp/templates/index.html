@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Speed dating</title>
+
+		<!-- CSS style -->
+        <link rel="stylesheet" href="../static/css/style.css">
+
+		<!-- Google fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300" rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+		<!-- D3.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	</head>
+	<body>
+
+		<div class="container">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav">
+						<li class="nav-item active">
+							<a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('index') }}">First Page</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('index') }}">Second Page</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			
+		</div>
+
+		<!-- RadarChart div -->
+		<div class="radarChart">
+			<h1>Ratings analysis</h1>
+
+			<!-- Global information -->
+			<p class="global-info"><strong>Five personality characteristics are evaluated ; Intelligence, sincerity, attractiveness, ambition and fun. For each of them, candidates gave ratings between 1-100.  These characteristics can refer to auto-evaluation or third-party evaluation, at different moments in the speed dating process.</strong>
+			<i>For example, candidates were asked : You have 100 points to distribute among the following attributes --give more points to those attributes that are more important in a potential date, and fewer points to those attributes that are less important in a potential date. Total points must equal 100.</i></p>
+	
+			<!-- Dropdown menus -->
+			<div class='custom-select'>
+				<div class="custom-select-gender">
+					<select id="genderDropdownButton">
+						<option selected> Gender </option>
+					</select>
+				</div>
+				<div class="custom-select-question">
+					<select id="questionDropdownButton">
+						<option selected> Question </option>
+					</select>
+				</div>
+			</div>
+			
+			<!-- Slider -->
+			<div class="slidecontainer">
+				<input type="range" min="1" max="3" value="1" class="slider" id="myRange">
+				<p class="slider-info"><i>Select time period (before, during or after speed dating experiment)</i></p>
+			</div>
+        </div>
+
+		<script src="../static/js/radarChart.js"></script>
+        <script src="../static/js/scriptRadar.js"></script>	
+	</body>
+</html>
