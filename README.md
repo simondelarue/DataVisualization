@@ -4,6 +4,7 @@ _Contributors : Antoine Boulat, Simon Delarue, Mohammed El Yaagoubi, Mathias Nou
 
 **Table of contents**  
 
+0. [Usage](#Usage)   
 1. [Project description](#Description)   
     1.1 [Data](#Data)  
     1.2 [Environment](#Env)  
@@ -11,6 +12,19 @@ _Contributors : Antoine Boulat, Simon Delarue, Mohammed El Yaagoubi, Mathias Nou
     2.1 [Ratings analysis](#Ratings)  
     2.2 [Evolution of ratings with regard of personal characteristics](#charac)  
     2.3 [Match analysis](#Match)  
+
+## 0. Usage <a class="anchor" id="Usage"></a>  
+
+To run the web application please follow instructions (command lines) below to :  
+* clone this Github repo and move to the cloned directory  
+* launch application script  
+* go to `http://127.0.0.1:5000/ `  
+
+``` python
+$ git clone https://github.com/simondelarue/DataVisualization
+$ cd DataVisulization/webapp
+$ python3 app.py
+```
 
 ## 1 Project description <a class="anchor" id="Description"></a>  
 
