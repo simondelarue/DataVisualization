@@ -18,13 +18,13 @@ body {
 }
 
 /* -------- NAVIGATION BAR --------- */
-/* Style from https://www.w3schools.com/Css/css_navbar_horizontal.asp */
+/* Style inspired from https://www.w3schools.com/Css/css_navbar_horizontal.asp */
 ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: rgb(170, 37, 37);
+    background-color: rgb(33, 92, 119);
 }
   
 li {
@@ -37,6 +37,7 @@ li a {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+    text-shadow: none;
 }
   
 /* Change the link color to #111 (black) on hover */
@@ -55,13 +56,12 @@ li a:hover {
 }
 
 /* -------- RADAR INFO --------- */
-
 .radar-info-container {
     width: 350px;
     height: 400px;
     border: 1px solid;
-    position: absolute;
-    top: 150px;
+    position: relative;
+    top: -50px;
     left: 65px;
     border-color:rgb(33, 92, 119);
 }
@@ -106,14 +106,13 @@ li a:hover {
 }
 
 /* -------- DROPDOWN MENUS --------- */
-
 /* Containers */
 .custom-select {
     width: 650px;
     height: 25px;
     position: relative;
     top: 5px;
-    left: 600px;
+    left: 700px;
 }
 
 .custom-select-gender {
@@ -230,7 +229,7 @@ button {
     display: inline-block;
     font-size: 12px;
     position: relative;
-    top: 50px;
+    top: -350px;
     right: -470px;
 }
 
@@ -244,7 +243,6 @@ button {
 
 /* -------- SLIDER --------- */
 /* Style of slider from https://www.w3schools.com/howto/howto_js_rangeslider.asp */
-
 .slider {
     -webkit-appearance: none;
     width: 20%;

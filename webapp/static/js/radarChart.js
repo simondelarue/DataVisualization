@@ -65,7 +65,7 @@ function RadarChart(id, data, options, legend) {
 			.attr("width", cfg.w + (cfg.margin.left + cfg.margin.right)*3)
 			.attr("height", cfg.h + cfg.margin.top) //+ cfg.margin.bottom)
 			.attr("class", "radar"+id)
-			.attr("transform", "translate(" + (cfg.margin.left)*(2) + "," + (-40) + ")");
+			.attr("transform", "translate(" + (cfg.margin.left)*(2) + "," + (-cfg.h - 150) + ")");
 	//Append a g element		
 	var g = svg.append("g")
 			.attr("transform", "translate(" + (cfg.w*(0.4) + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top/2) + ")");
