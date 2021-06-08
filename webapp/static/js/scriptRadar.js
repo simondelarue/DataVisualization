@@ -233,8 +233,16 @@ d3.select("#genderDropdownButton")
             // Fill history
             history.push(history_key(selectedQuestion, selectedGender));
             console.log('history after gender update : ' + history)
-            // Complete legend array
-            questionLegend.push(map_question_reversed(selectedQuestion));
+            // Complete legend array and add information about gender in legend
+            if (selectedGender=="0") {
+                questionLegend.push(map_question_reversed(selectedQuestion) + " (F)");    
+            } else {
+                if (selectedGender=="1") {
+                    questionLegend.push(map_question_reversed(selectedQuestion) + " (M)");
+                } else {
+                    questionLegend.push(map_question_reversed(selectedQuestion));
+                }
+            }
             // Update Radar chart
             update(selectedGender, selectedQuestion)
         }
@@ -298,7 +306,6 @@ function callbackClearButton(d){
 /* ---------------------------- */
 
 let color = d3.scale.ordinal()
-    //.range(["#EDC951","#CC333F","#00A0B0"]); 
     .range(["#a6cee3", "#fb9a99", "#b2df8a",
             "#fdbf6f", "#ff7f00", "#cab2d6", "#8dd3c7", "#1f78b4"])
     
