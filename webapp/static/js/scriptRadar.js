@@ -259,7 +259,15 @@ d3.select("#questionDropdownButton")
             history.push(history_key(selectedQuestion, selectedGender));
             console.log('history after question update : ' + history)
             // Complete legend array
-            questionLegend.push(map_question_reversed(selectedQuestion));
+            if (selectedGender=="0") {
+                questionLegend.push(map_question_reversed(selectedQuestion) + " (F)");    
+            } else {
+                if (selectedGender=="1") {
+                    questionLegend.push(map_question_reversed(selectedQuestion) + " (M)");
+                } else {
+                    questionLegend.push(map_question_reversed(selectedQuestion));
+                }
+            }
             // Update Radar chart
             update(selectedGender, selectedQuestion)
         }
