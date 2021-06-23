@@ -180,7 +180,6 @@ function dashboard_constructor(data) {
         .default([25, 30])
         .width(400)
         .on("onchange", val => {
-            console.log(val[0])
             d3.selectAll(".distrib_age")
                 .attr("fill", d => (d.age >= val[0]) & (d.age <= val[1]) ? clickedColor : defaultColor)
         });
@@ -385,7 +384,10 @@ function dashboard_constructor(data) {
         // Title of flower chart
         flower_petals.append("text")
             .attr("class", "title_flower_chart")
-            .text(gender_icon_legend[gender].slice(0,1).toUpperCase() + gender_icon_legend[gender].slice(1) + " " + age_range.join("-") + " years old")
+            .text(age_range[0] == age_range[1] ? 
+                gender_icon_legend[gender].slice(0,1).toUpperCase() + gender_icon_legend[gender].slice(1) + " " + age_range[0] + " years old" :
+                gender_icon_legend[gender].slice(0,1).toUpperCase() + gender_icon_legend[gender].slice(1) + " " + age_range.join("-") + " years old" 
+                )
             .style("font-size", 20)
             .style("font-weight", "bold")
             .style("text-anchor", "middle")
@@ -506,42 +508,74 @@ function dashboard_constructor(data) {
             .attr("x2", margin_ticket.left + w_ticket)
             .attr("y2", margin_ticket.top + 20);
 
-        // Define first question container
-        // Q1 : What does the average women think ?
+        // Define information div
+        if (age_range[0] == age_range[1]) {
+
+            html_text = "<li>How important is the <font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + 
+            "</font> criterion for " + gender_icon_legend[gender] + " to look for in the opposite sex ?<br><br></li>" +
+
+            age_range[0] + " years old " + gender_icon_legend[gender] + " give an average of <font style='font-weight:bold' color='grey'>" + 
+            d3.format(".0f")(petal_data.value) + "</font>/100 to the criterion " + 
+            "<font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font>. " +
+            "The average score given by " + gender_icon_legend[gender] + " of all ages is <font style='font-weight:bold' color='grey'>" +
+            d3.format(".0f")(d3.mean(Object.values(data.filter(d => d.gender === gender)).map(d => Object.values(d).slice(2,8)[index_data]))) + "</font>/100." +
+
+            "<br><br><br>" + 
+
+            "<li> According to these " + gender_icon_legend[gender] + ", how important do other " + gender_icon_legend[gender] + " consider the criterion <font style='font-weight:bold' color=" +
+            petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> in the opposite sex ?<br><br></li>" + 
+
+            age_range[0] + " years old " + gender_icon_legend[gender] + " estimate that fellow " + gender_icon_legend[gender] + " in their age group rate the importance of the criterion <font style='font-weight:bold' color=" +
+            petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> as <font style='font-weight:bold' color='grey'>" +
+            d3.format(".0f")(d3.range(6).map(i => d3.mean(Object.values(data.filter(d => d.gender == gender & d.age == age_range[0])).map(d => Object.values(d).slice(8,14)), d => d[i]))[index_data]) +
+            "</font>/100 when looking for a partner." +
+
+            "<br><br><br>" +
+
+            "<li> And " + gender_icon_legend[opposite_gender] + ", what importance do they attach to this criterion in the opposite sex ?<br><br></li>" +
+
+            nearest_ages_opposite_gender[0] + " years old " + gender_icon_legend[opposite_gender] + ", the nearest available age group, give a score of <font style='font-weight:bold' color='grey'>" + 
+            d3.format(".0f")(d3.range(6).map(i => d3.mean(Object.values(data.filter(d => d.gender == opposite_gender & d.age == nearest_ages_opposite_gender[0])).map(d => Object.values(d).slice(2,8)), d => d[i]))[index_data]) + 
+            "</font>/100 to the <font style='font-weight:bold' color=" + 
+            petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> criterion in terms of importance in the opposite sex."
+
+        } else {
+
+            html_text = "<li>How important is the <font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + 
+            "</font> criterion for " + gender_icon_legend[gender] + " to look for in the opposite sex ?<br><br></li>" +
+
+            age_range.join("-") + " years old " + gender_icon_legend[gender] + " give an average of <font style='font-weight:bold' color='grey'>" + 
+            d3.format(".0f")(petal_data.value) + "</font>/100 to the criterion " + 
+            "<font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font>. " +
+            "The average score given by " + gender_icon_legend[gender] + " of all ages is <font style='font-weight:bold' color='grey'>" +
+            d3.format(".0f")(d3.mean(Object.values(data.filter(d => d.gender === gender)).map(d => Object.values(d).slice(2,8)[index_data]))) + "</font>/100." +
+
+            "<br><br><br>" + 
+
+            "<li> According to these " + gender_icon_legend[gender] + ", how important do other " + gender_icon_legend[gender] + " consider the criterion <font style='font-weight:bold' color=" +
+            petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> in the opposite sex ?<br><br></li>" + 
+
+            age_range.join("-") + " years old " + gender_icon_legend[gender] + " estimate that fellow " + gender_icon_legend[gender] + " in their age group rate the importance of the criterion <font style='font-weight:bold' color=" +
+            petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> as <font style='font-weight:bold' color='grey'>" +
+            d3.format(".0f")(d3.range(6).map(i => d3.mean(Object.values(data.filter(d => d.gender == gender & d.age >= age_range[0] & d.age <= age_range[1])).map(d => Object.values(d).slice(8,14)), d => d[i]))[index_data]) +
+            "</font>/100 when looking for a partner." +
+
+            "<br><br><br>" +
+
+            "<li> And " + gender_icon_legend[opposite_gender] + ", what importance do they attach to this criterion in the opposite sex ?<br><br></li>" +
+
+            nearest_ages_opposite_gender.join("-") + " years old " + gender_icon_legend[opposite_gender] + ", the nearest available age group, give a score of <font style='font-weight:bold' color='grey'>" + 
+            d3.format(".0f")(d3.range(6).map(i => d3.mean(Object.values(data.filter(d => d.gender == opposite_gender & d.age >= nearest_ages_opposite_gender[0] & d.age <= nearest_ages_opposite_gender[1])).map(d => Object.values(d).slice(2,8)), d => d[i]))[index_data]) + 
+            "</font>/100 to the <font style='font-weight:bold' color=" + 
+            petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> criterion in terms of importance in the opposite sex."
+
+        }
+
+
+
         ticket_div.append("div")
             .attr("class", "ticket_info")
-            .html(
-
-                "<li>How important is the <font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + 
-                "</font> criterion for " + gender_icon_legend[gender] + " to look for in the opposite sex ?<br><br></li>" +
-
-                age_range.join("-") + " years old " + gender_icon_legend[gender] + " give an average of <font style='font-weight:bold' color='grey'>" + 
-                d3.format(".0f")(petal_data.value) + "</font>/100 to the criterion " + 
-                "<font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font>. " +
-                "The average score given by " + gender_icon_legend[gender] + " of all ages is <font style='font-weight:bold' color='grey'>" +
-                d3.format(".0f")(d3.mean(Object.values(data.filter(d => d.gender === gender)).map(d => Object.values(d).slice(2,8)[index_data]))) + "</font>/100." +
-
-                "<br><br><br>" + 
-
-                "<li> According to these " + gender_icon_legend[gender] + ", how important do other " + gender_icon_legend[gender] + " consider the criterion <font style='font-weight:bold' color=" +
-                petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> in the opposite sex ?<br><br></li>" + 
-
-                age_range.join("-") + " years old " + gender_icon_legend[gender] + " estimate that fellow " + gender_icon_legend[gender] + " in their age group rate the importance of the criterion <font style='font-weight:bold' color=" +
-                petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> as <font style='font-weight:bold' color='grey'>" +
-                d3.format(".0f")(d3.range(6).map(i => d3.mean(Object.values(data.filter(d => d.gender == gender & d.age >= age_range[0] & d.age <= age_range[1])).map(d => Object.values(d).slice(8,14)), d => d[i]))[index_data]) +
-                //d3.format(".0f")(Object.values(data.filter(d => d.gender === gender & d.age == age)[0]).slice(8,14)[index_data]) + 
-                "</font>/100 when looking for a partner." +
-
-                "<br><br><br>" +
-
-                "<li> And " + gender_icon_legend[opposite_gender] + ", what importance do they attach to this criterion in the opposite sex ?<br><br></li>" +
-
-                nearest_ages_opposite_gender.join("-") + " years old " + gender_icon_legend[opposite_gender] + ", the nearest available age group, give a score of <font style='font-weight:bold' color='grey'>" + 
-                d3.format(".0f")(d3.range(6).map(i => d3.mean(Object.values(data.filter(d => d.gender == opposite_gender & d.age >= nearest_ages_opposite_gender[0] & d.age <= nearest_ages_opposite_gender[1])).map(d => Object.values(d).slice(2,8)), d => d[i]))[index_data]) + 
-                "</font>/100 to the <font style='font-weight:bold' color=" + 
-                petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> criterion in terms of importance in the opposite sex."
-
-            )
+            .html(html_text)
             .style("position", "relative")
             .style("font-size", 14)
             .style("fill", "white")
