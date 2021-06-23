@@ -177,11 +177,12 @@ function dashboard_constructor(data) {
     let slider = d3.sliderBottom()
         .step(1)
         .domain(d3.extent(data, d => d.age))
-        .value(25)
+        .default([25, 30])
         .width(400)
         .on("onchange", val => {
+            console.log(val[0])
             d3.selectAll(".distrib_age")
-                .attr("fill", d => d.age == val ? clickedColor : defaultColor)
+                .attr("fill", d => (d.age >= val[0]) & (d.age <= val[1]) ? clickedColor : defaultColor)
         });
 
     let slider_svg = filter_svg.append("svg")
@@ -199,7 +200,7 @@ function dashboard_constructor(data) {
         .enter()
         .append("rect")
         .attr("class", "distrib_age")
-        .attr("fill", d => (d.gender == 0 & d.age == 25) ? clickedColor : defaultColor)
+        .attr("fill", d => (d.gender == 0 & d.age >= 25 & d.age <= 30) ? clickedColor : defaultColor)
         .attr("stroke-width", 1)
         .attr("stroke", "white")
         .attr("x", d => d.gender == 0 ? xScale(d.age) : 0)
@@ -225,17 +226,33 @@ function dashboard_constructor(data) {
         })
         .on("click", () => {
 
-            age_selected = slider.value()
+            age_range_selected = slider.value()
+
             if (d3.select("#button_women").select("rect").attr("fill") == clickedColor) {
 
                 // Test existence of age in data
-                if (data.filter(d => d.gender == 0).map(d => d.age).includes(age_selected)) {
+                if (d3.sum(d3.range(age_range_selected[0], age_range_selected[1]+1).map(age => data.filter(d => d.gender == 0).map(d => d.age).includes(age))) > 0) {
                     // Plot flower
-                    draw_flower(0, age_selected)
+                    draw_flower(0, age_range_selected)
                 } else {
+
+                    // --- Flower chart ---
+
                     // Remove old petals
                     flower_petals.selectAll("g.petal")
                         .remove();
+                    // Remove old title
+                    flower_petals.select(".title_flower_chart")
+                        .remove();
+                    // Title of flower chart
+                    flower_petals.append("text")
+                        .attr("class", "title_flower_chart")
+                        .text(gender_icon_legend[0] + " " + age_range_selected.join("-") + " years old")
+                        .style("font-size", 20)
+                        .style("font-weight", "bold")
+                        .style("text-anchor", "middle")
+                        .attr("x", margin_flower.left + w_flower/2)
+                        .attr("y", 20);
                     // Error message
                     flower_petals.append("text")
                         .attr("class", "Error_message_missing_values")
@@ -246,18 +263,42 @@ function dashboard_constructor(data) {
                         .style("font-weight", "bold")
                         .attr("x", margin_flower.left + w_flower/2)
                         .attr("y", margin_flower.top + h_flower/2)
+
+                    // --- Ticket ---
+
+                    // Remove ticket
+                    d3.select(".ticket_head")
+                        .remove();
+                    d3.select(".ticket_info")
+                        .remove();
+
                 }
 
             } else if (d3.select("#button_men").select("rect").attr("fill") == clickedColor) {
 
                 // Test existence of age in data
-                if (data.filter(d => d.gender == 1).map(d => d.age).includes(age_selected)) {
+                if (d3.sum(d3.range(age_range_selected[0], age_range_selected[1]+1).map(age => data.filter(d => d.gender == 0).map(d => d.age).includes(age))) > 0) {
                     // Plot flower
-                    draw_flower(1, age_selected)
+                    draw_flower(1, age_range_selected)
                 } else {
+
+                    // --- Flower chart ---
+
                     // Remove old petals
                     flower_petals.selectAll("g.petal")
                         .remove();
+                    // Remove old title
+                    flower_petals.select(".title_flower_chart")
+                        .remove();
+                    // Title of flower chart
+                    flower_petals.append("text")
+                        .attr("class", "title_flower_chart")
+                        .text(gender_icon_legend[1] + " " + age_range_selected.join("-") + " years old")
+                        .style("font-size", 20)
+                        .style("font-weight", "bold")
+                        .style("text-anchor", "middle")
+                        .attr("x", margin_flower.left + w_flower/2)
+                        .attr("y", 20);
                     // Error message
                     flower_petals.append("text")
                         .attr("class", "Error_message_missing_values")
@@ -267,7 +308,16 @@ function dashboard_constructor(data) {
                         .style("font-size", 15)
                         .style("font-weight", "bold")
                         .attr("x", margin_flower.left + w_flower/2)
-                        .attr("y", margin_flower.top + h_flower/2)
+                        .attr("y", margin_flower.top + h_flower/2)    
+                        
+                    // --- Ticket ---
+
+                    // Remove ticket
+                    d3.select(".ticket_head")
+                        .remove();
+                    d3.select(".ticket_info")
+                        .remove();
+
                 }
 
             } 
@@ -306,10 +356,12 @@ function dashboard_constructor(data) {
     let petalFill = ['#FFADAD', '#FFD6A5', '#80ed99', '#468FAF', '#BDB2FF', '#FFC6FF'];
     let petalStroke = ['#e5383b', '#ff9f1c', '#57CC99', '#014F86', '#9785FF', '#ea698b'];
 
-    function draw_flower(gender, age) {
+    function draw_flower(gender, age_range) {
 
-        let flower_petals_data = Object.values(data.filter(d => d.gender === gender & d.age === age)[0]).slice(2, 8)
-        let flower_petals_label = Object.keys(data.filter(d => d.gender === gender & d.age === age)[0]).slice(2, 8)
+        let flower_petals_label = ["attractive", "sincere", "intelligent", "fun", "ambitious", "shared_interests"]
+        let data_subsample = Object.values(data.filter(d => d.gender == gender & d.age >= age_range[0] & d.age <= age_range[1])).map(d => Object.values(d).slice(2,8))
+        let flower_petals_data = d3.range(flower_petals_label.length).map(i => d3.mean(data_subsample, d => d[i]))
+        
         let flower_data = d3.range(flower_petals_data.length).map(i => {
             return {label: flower_petals_label[i], value: flower_petals_data[i]}
         });
@@ -333,7 +385,7 @@ function dashboard_constructor(data) {
         // Title of flower chart
         flower_petals.append("text")
             .attr("class", "title_flower_chart")
-            .text(gender_icon_legend[gender].slice(0,1).toUpperCase() + gender_icon_legend[gender].slice(1,) + " " + age + " years old")
+            .text(gender_icon_legend[gender].slice(0,1).toUpperCase() + gender_icon_legend[gender].slice(1) + " " + age_range.join("-") + " years old")
             .style("font-size", 20)
             .style("font-weight", "bold")
             .style("text-anchor", "middle")
@@ -346,7 +398,7 @@ function dashboard_constructor(data) {
             .enter()
             .append("g")
             .attr("class", "petal")
-            .attr("id", d=> "petal_" + d.label)
+            .attr("id", d => "petal_" + d.label)
             .style("cursor", "pointer")
             .on("click", (d, i) => {
                 
@@ -358,11 +410,11 @@ function dashboard_constructor(data) {
                 // Remove old ticket
                 d3.select(".ticket_head")
                     .remove();
-                d3.select(".Q1_answer")
+                d3.select(".ticket_info")
                     .remove();
 
                 // Define ticket
-                draw_ticket(gender, age, d, i)
+                draw_ticket(gender, age_range, d, i)
 
             });
 
@@ -421,11 +473,13 @@ function dashboard_constructor(data) {
 
     // --- Create ticket section ---
 
-    function draw_ticket(gender, age, filtered_data, index_data) {
+    function draw_ticket(gender, age_range, petal_data, index_data) {
 
         opposite_gender = gender == 1 ? 0:1
-        gender_opposite_ages = Object.values(dataset.filter(d => d.gender === opposite_gender)).map(d => d.age)
-        nearest_age_opposite_gender = gender_opposite_ages[gender_opposite_ages.map(d=> Math.abs(age-d)).indexOf(d3.min(gender_opposite_ages.map(d=> Math.abs(age-d))))]
+        gender_opposite_ages = Object.values(data.filter(d => d.gender === opposite_gender)).map(d => d.age)
+        nearest_ages_opposite_gender = age_range.map(
+            age => gender_opposite_ages[gender_opposite_ages.map(d=> Math.abs(age-d)).indexOf(d3.min(gender_opposite_ages.map(d=> Math.abs(age-d))))]
+        )
 
         // Define head of the ticket
         let ticket_head = ticket_div.append("svg")
@@ -436,7 +490,7 @@ function dashboard_constructor(data) {
         // Adding title to the head
         ticket_head.append("text")
             .attr("class", "title_ticket")
-            .text(filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + " :")
+            .text(petal_data.label.slice(0, 1).toUpperCase() + petal_data.label.slice(1).replace("_", " ") + " :")
             .attr("text-anchor", "start")
             .style("font-size", 20)
             .style("font-weight", "bold")
@@ -455,35 +509,38 @@ function dashboard_constructor(data) {
         // Define first question container
         // Q1 : What does the average women think ?
         ticket_div.append("div")
-            .attr("class", "Q1_answer")
+            .attr("class", "ticket_info")
             .html(
 
-                "<li>How important is the <font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + 
-                filtered_data.label.slice(1).replace("_", " ") + "</font> criterion for " + gender_icon_legend[gender] + " to look for in the opposite sex ?<br><br></li>" +
+                "<li>How important is the <font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + 
+                "</font> criterion for " + gender_icon_legend[gender] + " to look for in the opposite sex ?<br><br></li>" +
 
-                age + " years old " + gender_icon_legend[gender] + " give an average of <font style='font-weight:bold' color='grey'>" + 
-                d3.format(".0f")(filtered_data.value) + "</font>/100 to the criterion " + 
-                "<font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + 
-                filtered_data.label.slice(1).replace("_", " ") + "</font>. " +
+                age_range.join("-") + " years old " + gender_icon_legend[gender] + " give an average of <font style='font-weight:bold' color='grey'>" + 
+                d3.format(".0f")(petal_data.value) + "</font>/100 to the criterion " + 
+                "<font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font>. " +
                 "The average score given by " + gender_icon_legend[gender] + " of all ages is <font style='font-weight:bold' color='grey'>" +
                 d3.format(".0f")(d3.mean(Object.values(data.filter(d => d.gender === gender)).map(d => Object.values(d).slice(2,8)[index_data]))) + "</font>/100." +
 
                 "<br><br><br>" + 
 
                 "<li> According to these " + gender_icon_legend[gender] + ", how important do other " + gender_icon_legend[gender] + " consider the criterion <font style='font-weight:bold' color=" +
-                petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> in the opposite sex ?<br><br></li>" + 
+                petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> in the opposite sex ?<br><br></li>" + 
 
-                age + " years old " + gender_icon_legend[gender] + " estimate that fellow " + gender_icon_legend[gender] + " in their age group rate the importance of the criterion <font style='font-weight:bold' color=" +
-                petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> as <font style='font-weight:bold' color='grey'>" +
-                d3.format(".0f")(Object.values(data.filter(d => d.gender === gender & d.age == age)[0]).slice(8,14)[index_data]) + "</font>/100 when looking for a partner." +
+                age_range.join("-") + " years old " + gender_icon_legend[gender] + " estimate that fellow " + gender_icon_legend[gender] + " in their age group rate the importance of the criterion <font style='font-weight:bold' color=" +
+                petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> as <font style='font-weight:bold' color='grey'>" +
+                d3.format(".0f")(d3.range(6).map(i => d3.mean(Object.values(data.filter(d => d.gender == gender & d.age >= age_range[0] & d.age <= age_range[1])).map(d => Object.values(d).slice(8,14)), d => d[i]))[index_data]) +
+                //d3.format(".0f")(Object.values(data.filter(d => d.gender === gender & d.age == age)[0]).slice(8,14)[index_data]) + 
+                "</font>/100 when looking for a partner." +
 
                 "<br><br><br>" +
 
                 "<li> And " + gender_icon_legend[opposite_gender] + ", what importance do they attach to this criterion in the opposite sex ?<br><br></li>" +
 
-                nearest_age_opposite_gender + " years old " + gender_icon_legend[opposite_gender] + ", the nearest available age category, give a score of <font style='font-weight:bold' color='grey'>" + 
-                d3.format(".0f")(Object.values(data.filter(d => d.gender === opposite_gender & d.age === nearest_age_opposite_gender)[0]).slice(2, 8)[index_data]) + "</font>/100 to the <font style='font-weight:bold' color=" + 
-                petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> criterion in terms of importance in the opposite sex."
+                nearest_ages_opposite_gender.join("-") + " years old " + gender_icon_legend[opposite_gender] + ", the nearest available age group, give a score of <font style='font-weight:bold' color='grey'>" + 
+                d3.format(".0f")(d3.range(6).map(i => d3.mean(Object.values(data.filter(d => d.gender == opposite_gender & d.age >= nearest_ages_opposite_gender[0] & d.age <= nearest_ages_opposite_gender[1])).map(d => Object.values(d).slice(2,8)), d => d[i]))[index_data]) + 
+                "</font>/100 to the <font style='font-weight:bold' color=" + 
+                petalStroke[index_data] + "> " + petal_data.label.replace("_", " ") + "</font> criterion in terms of importance in the opposite sex."
+
             )
             .style("position", "relative")
             .style("font-size", 14)
