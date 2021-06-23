@@ -9,13 +9,13 @@ let margin_filter = {left: 100, right: 100, top: 50, bottom: 50};
 
 // Flower svg geometry
 const w_flower = 700;
-const h_flower = 500;
+const h_flower = 450;
 let margin_flower = {left: 50, right: 50, top: 50, bottom: 50};
 
 // Ticket info svg geometry
 const w_ticket = 500;
-const h_ticket = 400;
-let margin_ticket = {left: 50, right: 50, top: 100, bottom: 100};
+const h_ticket = 450;
+let margin_ticket = {left: 50, right: 50, top: 50, bottom: 50};
 
 // Data
 let dataset = [];
@@ -25,7 +25,7 @@ let filter_svg = d3.select("body")
     .append("svg")
     .attr("class", "filter_svg")
     .style("position", "absolute")
-    .style("top", 50)
+    .style("top", 100)
     .style("left", 200)
     .style("width", margin_filter.left + w_filter + margin_filter.right)
     .style("height", margin_filter.top + h_filter + margin_filter.bottom);
@@ -35,7 +35,7 @@ let flower_svg = d3.select("body")
     .append("svg")
     .attr("class", "flower_svg")
     .style("position", "absolute")
-    .style("top", 50 + margin_filter.top + h_filter + margin_filter.bottom)
+    .style("top", 100 + margin_filter.top + h_filter + margin_filter.bottom)
     .style("left", 200)
     .style("width", margin_flower.right + w_flower + margin_flower.left)
     .style("height", margin_flower.top + h_flower + margin_flower.bottom);
@@ -45,7 +45,7 @@ let ticket_div = d3.select("body")
     .append("div")
     .attr("class", "ticket_svg")
     .style("position", "absolute")
-    .style("top", 50 + margin_filter.top + h_filter + margin_filter.bottom)
+    .style("top", 100 + margin_filter.top + h_filter + margin_filter.bottom)
     .style("left", 200 + margin_flower.left + w_flower + margin_flower.right)
     .style("width", margin_ticket.left + w_ticket + margin_ticket.right)
     .style("height", margin_ticket.top + h_ticket + margin_ticket.bottom);
@@ -303,8 +303,8 @@ function dashboard_constructor(data) {
     let labelRotation = [0, 60, -60, 0, 60, -60];
     let labelxTransfo = [445, 420, 360, 310, 350, 420];
     let labelyTransfo = [300, 325, 365, 300, 215, 250]
-    let petalFill = ['#FFADAD', '#FFD6A5', '#CAFFBF', '#9BF6FF', '#BDB2FF', '#FFC6FF'];
-    let petalStroke = ['#FF3333', '#FFB65C', '#88FF70', '#0AEBFF', '#9785FF', '#FF70FF'];
+    let petalFill = ['#FFADAD', '#FFD6A5', '#80ed99', '#468FAF', '#BDB2FF', '#FFC6FF'];
+    let petalStroke = ['#e5383b', '#ff9f1c', '#57CC99', '#014F86', '#9785FF', '#ea698b'];
 
     function draw_flower(gender, age) {
 
@@ -423,8 +423,6 @@ function dashboard_constructor(data) {
 
     function draw_ticket(gender, age, filtered_data, index_data) {
 
-        let writeColor = ['#CC0000', '#CC7000', '#22CC00', '#00A8B8', '#745CFF', '#CC00CC'];
-
         opposite_gender = gender == 1 ? 0:1
         gender_opposite_ages = Object.values(dataset.filter(d => d.gender === opposite_gender)).map(d => d.age)
         nearest_age_opposite_gender = gender_opposite_ages[gender_opposite_ages.map(d=> Math.abs(age-d)).indexOf(d3.min(gender_opposite_ages.map(d=> Math.abs(age-d))))]
@@ -442,7 +440,7 @@ function dashboard_constructor(data) {
             .attr("text-anchor", "start")
             .style("font-size", 20)
             .style("font-weight", "bold")
-            .style("fill", writeColor[index_data])
+            .style("fill", petalStroke[index_data])
             .attr("x", margin_ticket.left)
             .attr("y", margin_ticket.top);
 
@@ -460,12 +458,12 @@ function dashboard_constructor(data) {
             .attr("class", "Q1_answer")
             .html(
 
-                "<li>How important is the <font style='font-weight:bold' color=" + writeColor[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + 
-                filtered_data.label.slice(1).replace("_", " ") + "</font> criterion to " + gender_icon_legend[gender] + " in their search for a partner ?<br><br></li>" +
+                "<li>How important is the <font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + 
+                filtered_data.label.slice(1).replace("_", " ") + "</font> criterion for " + gender_icon_legend[gender] + " to look for in the opposite sex ?<br><br></li>" +
 
                 age + " years old " + gender_icon_legend[gender] + " give an average of <font style='font-weight:bold' color='grey'>" + 
                 d3.format(".0f")(filtered_data.value) + "</font>/100 to the criterion " + 
-                "<font style='font-weight:bold' color=" + writeColor[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + 
+                "<font style='font-weight:bold' color=" + petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + 
                 filtered_data.label.slice(1).replace("_", " ") + "</font>. " +
                 "The average score given by " + gender_icon_legend[gender] + " of all ages is <font style='font-weight:bold' color='grey'>" +
                 d3.format(".0f")(d3.mean(Object.values(data.filter(d => d.gender === gender)).map(d => Object.values(d).slice(2,8)[index_data]))) + "</font>/100." +
@@ -473,19 +471,19 @@ function dashboard_constructor(data) {
                 "<br><br><br>" + 
 
                 "<li> According to these " + gender_icon_legend[gender] + ", how important do other " + gender_icon_legend[gender] + " consider the criterion <font style='font-weight:bold' color=" +
-                writeColor[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> when looking for a partner ?<br><br></li>" + 
+                petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> in the opposite sex ?<br><br></li>" + 
 
-                age + " years old " + gender_icon_legend[gender] + " estimate that " + gender_icon_legend[gender] + " in their age group rate the criterion <font style='font-weight:bold' color=" +
-                writeColor[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> as <font style='font-weight:bold' color='grey'>" +
+                age + " years old " + gender_icon_legend[gender] + " estimate that fellow " + gender_icon_legend[gender] + " in their age group rate the importance of the criterion <font style='font-weight:bold' color=" +
+                petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> as <font style='font-weight:bold' color='grey'>" +
                 d3.format(".0f")(Object.values(data.filter(d => d.gender === gender & d.age == age)[0]).slice(8,14)[index_data]) + "</font>/100 when looking for a partner." +
 
                 "<br><br><br>" +
 
-                "<li> And " + gender_icon_legend[opposite_gender] + ", what importance do they attach to this criterion ?</li><br><br>" +
+                "<li> And " + gender_icon_legend[opposite_gender] + ", what importance do they attach to this criterion in the opposite sex ?<br><br></li>" +
 
                 nearest_age_opposite_gender + " years old " + gender_icon_legend[opposite_gender] + ", the nearest available age category, give a score of <font style='font-weight:bold' color='grey'>" + 
                 d3.format(".0f")(Object.values(data.filter(d => d.gender === opposite_gender & d.age === nearest_age_opposite_gender)[0]).slice(2, 8)[index_data]) + "</font>/100 to the <font style='font-weight:bold' color=" + 
-                writeColor[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> criterion in terms of importance when looking for a partner."
+                petalStroke[index_data] + "> " + filtered_data.label.slice(0, 1).toUpperCase() + filtered_data.label.slice(1).replace("_", " ") + "</font> criterion in terms of importance in the opposite sex."
             )
             .style("position", "relative")
             .style("font-size", 14)
