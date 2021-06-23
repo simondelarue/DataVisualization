@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template
+import webbrowser
 
 # Flask config
 app = Flask(__name__)
@@ -19,4 +20,5 @@ def indexFlower():
 
 # APP
 if __name__ == '__main__':
-    app.run(debug=True)
+    webbrowser.open_new("http://127.0.0.1:5000/");
+    app.run(debug=False)
