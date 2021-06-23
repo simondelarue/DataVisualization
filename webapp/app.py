@@ -11,6 +11,11 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+# INDEFLOWER
+@app.route('/indexFlower', methods=['GET'])
+def indexFlower():
+    return render_template('indexFlower.html')
+
 
 # APP
 if __name__ == '__main__':
