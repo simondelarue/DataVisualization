@@ -3,7 +3,7 @@
 // ================
 
 // Filter svg geometry
-const w_filter = 1200;
+const w_filter = 800;
 const h_filter = 150;
 let margin_filter = {left: 100, right: 100, top: 50, bottom: 50};
 
@@ -26,7 +26,7 @@ let filter_svg = d3.select("body")
     .attr("class", "filter_svg")
     .style("position", "absolute")
     .style("top", 100)
-    .style("left", 200)
+    .style("left", 500)
     .style("width", margin_filter.left + w_filter + margin_filter.right)
     .style("height", margin_filter.top + h_filter + margin_filter.bottom);
 
@@ -96,41 +96,96 @@ function dashboard_constructor(data) {
         .attr("id", (d, i) => "button_" + gender_icon_legend[i])
         .style("cursor", "pointer")
         .on("click", (d, i) => {
-            d3.range(2).map(i_bis => {
-                if (i_bis == i) {
 
-                    // Color button selected
-                    d3.select("#button_" + gender_icon_legend[i_bis])
-                        .select("rect")
-                        .attr("fill", clickedColor);
+            // --- Update button ---
 
-                    // Recover age selected
-                    age_selected = slider.value();
+            // Change button color for clicked one
+            d3.select("#button_" + gender_icon_legend[i])
+                .select("rect")
+                .attr("fill", clickedColor);
 
-                    // Remove old bar chart
-                    slider_svg.selectAll(".distrib_age")
-                        .remove();
+            // Change button color for not-clicked one
+            d3.select(i == 0 ? "#button_" + gender_icon_legend[1]: "#button_" + gender_icon_legend[0])
+                .select("rect")
+                .attr("fill", defaultColor);
 
-                    // Create new bar chart
-                    slider_svg.selectAll("rect")
-                        .data(data)
-                        .enter()
-                        .append("rect")
-                        .attr("class", "distrib_age")
-                        .attr("fill", d => (d.gender == i_bis & d.age == age_selected) ? clickedColor : defaultColor)
-                        .attr("stroke-width", 1)
-                        .attr("stroke", "white")
-                        .attr("x", d => d.gender == i_bis ? xScale(d.age) : 0)
-                        .attr("y", d => d.gender == i_bis ? -yScale(d.nb_instances) : 0)
-                        .attr("width", d => d.gender == i_bis ? 11 : 0)
-                        .attr("height", d => d.gender == i_bis ? yScale(d.nb_instances)-6 : 0);
+            // --- Update bar chart ---
 
-                } else {
-                    d3.select("#button_" + gender_icon_legend[i_bis])
-                        .select("rect")
-                        .attr("fill", defaultColor)
-                }
-            })
+            // Recover age selection
+            age_range_selected = slider.value()
+
+            // Remove old bar chart
+            slider_svg.selectAll(".distrib_age")
+                .remove();
+
+            // Create new bar chart
+            slider_svg.selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("class", "distrib_age")
+                .attr("fill", d => (d.gender == i & d.age >= age_range_selected[0] & d.age <= age_range_selected[1]) ? clickedColor : defaultColor)
+                .attr("stroke-width", 1)
+                .attr("stroke", "white")
+                .attr("x", d => d.gender == i ? xScale(d.age) : 0)
+                .attr("y", d => d.gender == i ? -yScale(d.nb_instances) : 0)
+                .attr("width", d => d.gender == i ? 11 : 0)
+                .attr("height", d => d.gender == i ? yScale(d.nb_instances)-6 : 0);
+
+            // --- Update Flower chart ---
+
+            // Test existence of age in data
+            if (d3.sum(d3.range(age_range_selected[0], age_range_selected[1]+1).map(age => data.filter(d => d.gender == i).map(d => d.age).includes(age))) > 0) {
+                
+                // Plot flower
+                draw_flower(i, age_range_selected)
+
+                // Simulate a click on a petal to plot the ticket for default criterion "Attractive"
+                document.querySelector("#petal_attractive").dispatchEvent(new Event('click'));
+
+            } else {
+
+                // --- Flower chart ---
+
+                // Remove old petals
+                flower_petals.selectAll("g.petal")
+                    .remove();
+
+                // Remove old title
+                flower_petals.select(".title_flower_chart")
+                    .remove();
+
+                // Title of flower chart
+                flower_petals.append("text")
+                    .attr("class", "title_flower_chart")
+                    .text(gender_icon_legend[i] + " " + age_range_selected.join("-") + " years old")
+                    .style("font-size", 20)
+                    .style("font-weight", "bold")
+                    .style("text-anchor", "middle")
+                    .attr("x", margin_flower.left + w_flower/2)
+                    .attr("y", 20);
+
+                // Error message
+                flower_petals.append("text")
+                    .attr("class", "Error_message_missing_values")
+                    .text("No values for filters selected.")
+                    .style("text-anchor", "middle")
+                    .style("fill", "red")
+                    .style("font-size", 15)
+                    .style("font-weight", "bold")
+                    .attr("x", margin_flower.left + w_flower/2)
+                    .attr("y", margin_flower.top + h_flower/2)
+
+                // --- Ticket ---
+
+                // Remove ticket
+                d3.select(".ticket_head")
+                    .remove();
+                d3.select(".ticket_info")
+                    .remove();
+
+            };
+
         });
 
     // Adding a rect to each button group
@@ -170,7 +225,7 @@ function dashboard_constructor(data) {
         .attr("text-anchor", "start")
         .text("Age selection :")
         .style("font-size", 12)
-        .attr("x", margin_filter.left + w_filter - 750)
+        .attr("x", margin_filter.left + w_filter + margin_filter.right - 550)
         .attr("y", margin_filter.top);
 
     // Gender selection slider   
@@ -179,13 +234,81 @@ function dashboard_constructor(data) {
         .domain(d3.extent(data, d => d.age))
         .default([25, 30])
         .width(400)
-        .on("onchange", val => {
+        .on("onchange", age_range_selected => {
+
+            // --- Update age range selected ---
+
             d3.selectAll(".distrib_age")
-                .attr("fill", d => (d.age >= val[0]) & (d.age <= val[1]) ? clickedColor : defaultColor)
+                .attr("fill", d => (d.age >= age_range_selected[0]) & (d.age <= age_range_selected[1]) ? clickedColor : defaultColor);
+
+            // --- Update Flower chart ---
+
+            d3.range(2).map(i => {
+
+                if (d3.select("#button_" + gender_icon_legend[i]).select("rect").attr("fill") == clickedColor) {
+
+                    console.log("ok")
+
+                    // Test existence of age in data
+                    if (d3.sum(d3.range(age_range_selected[0], age_range_selected[1]+1).map(age => data.filter(d => d.gender == i).map(d => d.age).includes(age))) > 0) {
+                        
+                        // Plot flower
+                        draw_flower(i, age_range_selected)
+
+                        // Simulate a click on a petal to plot the ticket for default criterion "Attractive"
+                        document.querySelector("#petal_attractive").dispatchEvent(new Event('click'));
+
+                    } else {
+
+                        // --- Flower chart ---
+
+                        // Remove old petals
+                        flower_petals.selectAll("g.petal")
+                            .remove();
+
+                        // Remove old title
+                        flower_petals.select(".title_flower_chart")
+                            .remove();
+
+                        // Title of flower chart
+                        flower_petals.append("text")
+                            .attr("class", "title_flower_chart")
+                            .text(gender_icon_legend[i] + " " + age_range_selected.join("-") + " years old")
+                            .style("font-size", 20)
+                            .style("font-weight", "bold")
+                            .style("text-anchor", "middle")
+                            .attr("x", margin_flower.left + w_flower/2)
+                            .attr("y", 20);
+
+                        // Error message
+                        flower_petals.append("text")
+                            .attr("class", "Error_message_missing_values")
+                            .text("No values for filters selected.")
+                            .style("text-anchor", "middle")
+                            .style("fill", "red")
+                            .style("font-size", 15)
+                            .style("font-weight", "bold")
+                            .attr("x", margin_flower.left + w_flower/2)
+                            .attr("y", margin_flower.top + h_flower/2)
+
+                        // --- Ticket ---
+
+                        // Remove ticket
+                        d3.select(".ticket_head")
+                            .remove();
+                        d3.select(".ticket_info")
+                            .remove();
+
+                    };
+
+                }
+
+            })
+
         });
 
     let slider_svg = filter_svg.append("svg")
-        .attr("x", margin_filter.left + w_filter - 750)
+        .attr("x", margin_filter.left + w_filter + margin_filter.right - 550)
         .attr("y", margin_filter.top + 20)
         .attr("width", 450)
         .attr("height", h_filter)
@@ -206,145 +329,7 @@ function dashboard_constructor(data) {
         .attr("y", d => d.gender == 0 ? -yScale(d.nb_instances) : 0)
         .attr("width", d => d.gender == 0 ? 11 : 0)
         .attr("height", d => d.gender == 0 ? yScale(d.nb_instances)-6 : 0);
-        
-    // --- Create refresh selection button ---
-    
-    let refresh_button = filter_svg.append("g")
-        .attr("class", "button")
-        .attr("id", "button_refresh")
-        .style("cursor", "pointer")
-        .on("mouseover", () => {
-            d3.select("#button_refresh")
-                .select("rect")
-                .attr("fill", clickedColor);
-        })
-        .on("mouseout", () => {
-            d3.select("#button_refresh")
-                .select("rect")
-                .attr("fill", defaultColor);
-        })
-        .on("click", () => {
-
-            age_range_selected = slider.value()
-
-            if (d3.select("#button_women").select("rect").attr("fill") == clickedColor) {
-
-                // Test existence of age in data
-                if (d3.sum(d3.range(age_range_selected[0], age_range_selected[1]+1).map(age => data.filter(d => d.gender == 0).map(d => d.age).includes(age))) > 0) {
-                    // Plot flower
-                    draw_flower(0, age_range_selected)
-                } else {
-
-                    // --- Flower chart ---
-
-                    // Remove old petals
-                    flower_petals.selectAll("g.petal")
-                        .remove();
-                    // Remove old title
-                    flower_petals.select(".title_flower_chart")
-                        .remove();
-                    // Title of flower chart
-                    flower_petals.append("text")
-                        .attr("class", "title_flower_chart")
-                        .text(gender_icon_legend[0] + " " + age_range_selected.join("-") + " years old")
-                        .style("font-size", 20)
-                        .style("font-weight", "bold")
-                        .style("text-anchor", "middle")
-                        .attr("x", margin_flower.left + w_flower/2)
-                        .attr("y", 20);
-                    // Error message
-                    flower_petals.append("text")
-                        .attr("class", "Error_message_missing_values")
-                        .text("No values for filters selected.")
-                        .style("text-anchor", "middle")
-                        .style("fill", "red")
-                        .style("font-size", 15)
-                        .style("font-weight", "bold")
-                        .attr("x", margin_flower.left + w_flower/2)
-                        .attr("y", margin_flower.top + h_flower/2)
-
-                    // --- Ticket ---
-
-                    // Remove ticket
-                    d3.select(".ticket_head")
-                        .remove();
-                    d3.select(".ticket_info")
-                        .remove();
-
-                }
-
-            } else if (d3.select("#button_men").select("rect").attr("fill") == clickedColor) {
-
-                // Test existence of age in data
-                if (d3.sum(d3.range(age_range_selected[0], age_range_selected[1]+1).map(age => data.filter(d => d.gender == 0).map(d => d.age).includes(age))) > 0) {
-                    // Plot flower
-                    draw_flower(1, age_range_selected)
-                } else {
-
-                    // --- Flower chart ---
-
-                    // Remove old petals
-                    flower_petals.selectAll("g.petal")
-                        .remove();
-                    // Remove old title
-                    flower_petals.select(".title_flower_chart")
-                        .remove();
-                    // Title of flower chart
-                    flower_petals.append("text")
-                        .attr("class", "title_flower_chart")
-                        .text(gender_icon_legend[1] + " " + age_range_selected.join("-") + " years old")
-                        .style("font-size", 20)
-                        .style("font-weight", "bold")
-                        .style("text-anchor", "middle")
-                        .attr("x", margin_flower.left + w_flower/2)
-                        .attr("y", 20);
-                    // Error message
-                    flower_petals.append("text")
-                        .attr("class", "Error_message_missing_values")
-                        .text("No values for filters selected.")
-                        .style("text-anchor", "middle")
-                        .style("fill", "red")
-                        .style("font-size", 15)
-                        .style("font-weight", "bold")
-                        .attr("x", margin_flower.left + w_flower/2)
-                        .attr("y", margin_flower.top + h_flower/2)    
-                        
-                    // --- Ticket ---
-
-                    // Remove ticket
-                    d3.select(".ticket_head")
-                        .remove();
-                    d3.select(".ticket_info")
-                        .remove();
-
-                }
-
-            } 
-
-            // Simulate a click on a petal to plot the ticket for default criterion "Attractive"
-            document.querySelector("#petal_attractive").dispatchEvent(new Event('click'));
-
-        });
-    
-    refresh_button.append("rect")
-        .attr("fill", defaultColor)
-        .attr("width", bWidth)
-        .attr("height", bHeight)
-        .attr("x", margin_filter.left + w_filter - 100)
-        .attr("y", margin_filter.top + 20)
-        .attr("rx", 10) 
-        .attr("ry", 10);
-
-    refresh_button.append("text")
-        .text("\uf01e") 
-        .attr("text-anchor", "middle")
-        .attr("dominant-baseline", "central")
-        .attr("font-family", "FontAwesome")
-        .attr("fill", "white")
-        .style("font-size", 50)  
-        .attr("x", margin_filter.left + w_filter - 100 + bWidth/2)
-        .attr("y", margin_filter.top + 20 + bHeight/2)
-        
+                
     // --- Create flower chart ---
 
     let petalxTransfo = [400, 425, 425, 400, 375, 375];
@@ -467,8 +452,8 @@ function dashboard_constructor(data) {
     // Initialize flower's petals
     let flower_petals = flower_svg.append("g");
 
-    // Simulate a click on refresh button to plot the flower chart for default selection
-    document.querySelector("#button_refresh").dispatchEvent(new Event('click'));
+    // Simulate a click on women button to plot the flower chart for default selection
+    document.querySelector("#button_women").dispatchEvent(new Event('click'));
 
     // Simulate a click on a petal to plot the ticket for default criterion "Attractive"
     document.querySelector("#petal_attractive").dispatchEvent(new Event('click'));
