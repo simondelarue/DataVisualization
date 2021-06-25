@@ -2,6 +2,8 @@
 
 _Contributors : Antoine Boulat, Simon Delarue, Mohammed El Yaagoubi, Mathias Nourry, Lingli Zhan_ 
 
+Check the poster of the project [here](https://github.com/simondelarue/DataVisualization/tree/main/milestones/Poster.pdf) !
+
 **Table of contents**  
 
 0. [Usage](#Usage)   
