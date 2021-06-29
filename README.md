@@ -85,6 +85,45 @@ On the left of the tool, a small information textbox allows the user to understa
 
 ### 2.2 Evolution of ratings with regard of personal characteristics  <a class="anchor" id="Charac"></a>  
 
+This data may be interesting to a more specialised audience such as sociologists and/or psychologists, that’s the reason why it is on a separate webpage, and also because of a change of approach.
+
+After the first part using the martini-glass based approach, this section, as the user is an expert, **drill-down** approach is preferred.
+
+Having showed the difference between what people are looking for in the opposite sex and what people think the fellow men/women are looking for in the opposite sex, our goal is to provide more detailed information for all those who are interesed in having a more in-depht anaysis. A short list of questions that our users may be interested in are:
+Do the participants think they have very different rankings of the 6 criteria?
+Are these differences significant? Between men and women ?
+How does it change with age?
+
+Our objective is to provide elements so that the user can make up its own mind.
+That is the reason why we are providing only figures from the dataset, not any interpretation/assertion. We use a design more **reader-driven approach**. Sketch 2 supports tasks such as psychological hypotheses formation, participants profiling …
+
+The general overview of this second sketch desing was as following
+
+<p align="center">
+    <img src='img/flower_initial.png'>
+</p>
+
+Using python for data preprocessing and D3.js to build flower diagram and add interactivity, the final visualization tool looks like the following for the user.
+
+<p align="center">
+    <img src='img/fower_final.png'>
+</p>
+
+This tool gives the user the ability to filter data on different dimensions :
+
+- Gender
+- Age range
+- Attributes
+
+The implemented design is very similar to what was designed in the first place, with 2 exceptions correcting identified shortcomings:
+
+- On the upper left, the **gender selector** doesn’t contain anymore “All”.
+  The choice is limited to female or male icone. We chose to remove this option because of the size of our dataset. Actually, we have only 551 unique candidates. If the age range is too narrow, the possibility of having only women or only men in the selected population is very high and thus resulting in misleading information.
+
+- Ticket on the lower right has been replaced by a **text box**.
+  Before the change, only the second bar visualization provides information that is not already displayed in the flower diagram, i.e “ how the selected population think most of their fellow men/women have rated the criterion”.<br> This change has allowed us to have more space, thus enabling us to add more valuable information. Indeed, not only users know what is the rating for the selected population on the chosen criteria, but also several significant static information are added.</br>
+  
+  
 ### 2.3 Match analysis  <a class="anchor" id="Match"></a>  
 
 
