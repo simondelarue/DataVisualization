@@ -106,7 +106,7 @@ The general overview of this second sketch desing was as following
 Using python for data preprocessing and D3.js to build flower diagram and add interactivity, the final visualization tool looks like the following for the user.
 
 <p align="center">
-    <img src='img/fower_final.png'>
+    <img src='img/flower_final.gif'>
 </p>
 
 This tool gives the user the ability to filter data on different dimensions :
