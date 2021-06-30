@@ -126,4 +126,20 @@ The implemented design is very similar to what was designed in the first place, 
   
 ### 2.3 Match analysis  <a class="anchor" id="Match"></a>  
 
+We all want to know the secret to success in the dating world. Every self-proclaimed love guru swears to know this mysterious formula that makes people desirable to others. In the age of data, a great hunch would be to use the speed dating data with over 8,000 observations of matches and non-matches, with answers to survey questions about how people rate themselves and how they rate others on several dimensions. And that’s exactly what we did !
 
+On the left, you can find a simple scatter plot with a choice of feature to plot according to the match ratio (each point represents one of the subjects of the study). For this first visualisation, we use D3 (scatter.js) for the scatter plot and our own regression function for the linear trend.
+
+On the right, the solar correlation map represents the level of correlation of the different features with the match ratio. This diagram allows you to easily observe which features are highly correlated with the match ratio. 
+
+This approach is both sober and simple so that the tool is as accessible as possible.
+You can found the following features extract from the python file :
+- int_corr, quantifying the degree of correlation between the passions of each of the participants,
+- attr_o, the attractiveness score of the candidate based on the scores of other participants
+- mn_sat, the candidate grade of the exam
+- income, the average price of real estate in the area of residence which roughly represents the person's salary
+- imprelig, the importance score of a subject for his partner to have the same religion
+- go_out which represents the frequency of partying
+- date which represents the subject's dating frequency
+
+You can select one of these features and observe the impact of that feature on the match ratio using a drop-down menu. You can also create a dichotomy between men and women.
