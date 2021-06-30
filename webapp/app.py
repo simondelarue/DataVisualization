@@ -17,6 +17,10 @@ def index():
 def indexFlower():
     return render_template('indexFlower.html')
 
+#INDEXSCATTER
+@app.route('/indexScatter', methods=['GET'])
+def indexScatter():
+    return render_template('indexScatter.html')
 
 # APP
 if __name__ == '__main__':

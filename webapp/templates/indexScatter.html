@@ -1,0 +1,98 @@
+<html>
+    <head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Speed dating</title>
+		<!--<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">--> 
+
+		<!-- CSS style -->
+        <link rel="stylesheet" href="../static/css/style.css">
+
+		<!-- Google fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300" rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+		<!-- D3.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+        <script src="https://d3js.org/d3.v4.js"></script>
+
+        <!-- Font Awesome -->
+		<script src="https://use.fontawesome.com/75f8636f03.js"></script>
+
+        <!-- Interactive Things -->
+        <script src="https://lab.interactivethings.com/lib/d3-grid.js"></script>
+
+		<style>
+			body {
+			  margin: 0 auto;
+			  display: table;
+				font-family: "Helvetica Neue", sans-serif;
+			}
+			.regression {
+			  stroke-width: 4px;
+			  stroke: steelblue;
+			  stroke-dasharray: 10,5;
+			}
+			.equation {
+				font-size: 12px;
+				margin-top: 10px;
+				text-align: center;
+			}
+		</style>
+
+		
+
+
+	</head>
+	<body>
+
+		
+        
+
+        <!-- Navigation bar -->
+		<div class="navbar-container">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav">
+						<li class="nav-item active">
+							<a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('indexFlower') }}">Attribute analysis</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('indexScatter') }}">Match ratio correlation</a>
+						</li>
+					</ul>
+				</div>
+			</nav>	
+		</div>
+
+		<!-- ScatterPlot div -->
+		<div class="scatterPlot">
+			<br>
+			<h1>Understading correlation - Match ratio </h1> <br> 
+
+			<!-- Global information -->
+			<p class="global-info"><strong>We all want to know the secret to success in the dating world. Every self-proclaimed love guru swears to know this mysterious formula that makes people desirable to others. In the age of data, a great hunch would be to use the speed dating data with over 8,000 observations of matches and non-matches, with answers to survey questions about how people rate themselves and how they rate others on several dimensions. And that’s exactly what we did!</strong><br>
+			<i>We can use this graph to analyze the correlation between the different features and the match ratio among the candidates. The y-axis represents the ratio of matches while the x-axis represents the selected feature.</i></p>
+            
+			<!-- Dropdown menus -->
+			<div class='custom-select'>
+				<div class=".custom-select-gender-scatter">
+					<select id="genderDropdownButton-scatter">
+						<option selected> Gender : </option>
+					</select>
+				</div>
+				<div class=".custom-select-feature-scatter">
+					<select id="featureDropdownButton-scatter">
+						<option selected> Feature : </option>
+					</select>
+				</div>
+			</div>
+			
+        </div>
+		
+
+        <script src="../static/js/scatter.js"></script>	
+    </body>
+</html>
