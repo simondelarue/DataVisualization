@@ -142,4 +142,8 @@ You can found the following features extract from the python file :
 - go_out which represents the frequency of partying
 - date which represents the subject's dating frequency
 
+<p align="center">
+    <img src='img/flower_final.gif'>
+</p>
+
 You can select one of these features and observe the impact of that feature on the match ratio using a drop-down menu. You can also create a dichotomy between men and women.
